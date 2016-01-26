@@ -1,9 +1,9 @@
-var Canvas = require('canvas');
-var EventEmitter = require('events');
-var util = require('util');
-var rfb = require('rfb2');
-var exec = require('child_process').exec;
-var fs = require('fs');
+const Canvas = require('canvas');
+const EventEmitter = require('events');
+const util = require('util');
+const rfb = require('rfb2');
+const exec = require('child_process').exec;
+const fs = require('fs');
 
 function VNC(host, port) {
   EventEmitter.call(this);
@@ -25,7 +25,7 @@ function VNC(host, port) {
 
 util.inherits(VNC, EventEmitter);
 
-VNC.prototype.drawRect = function(rect) {
+VNC.prototype.drawRect = (rect) => {
  // TODO:
  console.log(rect);
 };

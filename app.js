@@ -1,13 +1,15 @@
-var express = require('express');
-var app = express();
-var path = require('path');
-var io = require('socket.io')();
-var port = process.env.PORT || 3000;
-var net = require('net');
+const express = require('express');
+const app = express();
+const path = require('path');
+const io = require('socket.io')();
+const fs = require('fs');
+const Android = require('./android');
+
+const port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + '/public'));
 
-app.listen(port, function(error) {
+app.listen(port, (error) => {
   if (error) {
     console.error(error)
   } else {
@@ -15,13 +17,9 @@ app.listen(port, function(error) {
   }
 });
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/index.html'));
 });
-
-
-var fs = require('fs');
-var Android = require('./android');
 
 process.title = 'socket.io-android-emulator';
 
@@ -29,30 +27,32 @@ process.title = 'socket.io-android-emulator';
 (function load() {
   var emu = new Android();
 
-  emu.on('error', function() {
+  emu.on('error', () => {
     console.log(new Date + ' - restarting emulator');
     emu.destroy();
     setTimeout(load, 1000);
   });
 
-  emu.on('raw', function(frame) {
+  emu.on('raw', (frame) => {
     io.emit('raw', frame);
   });
 
-  emu.on('frame', function(buf) {
+  emu.on('frame', (buf) => {
     redis.set('computer:frame', buf);
   });
 
-  emu.on('copy', function(rect) {
+  emu.on('copy', (rect) => {
     io.emit('copy', rect);
   });
 
-  setTimeout(function() {
+  setTimeout(() => {
     console.log('running emu');
     emu.run();
   }, 2000);
 
 })();
+
+
 
 
 

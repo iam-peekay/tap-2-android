@@ -1,15 +1,15 @@
-var EventEmitter = require('events');
-var util = require('util');
-var sys = require('sys');
-var fs = require('fs');
-var exec = require('child_process').exec;
-var VNC = require('./vnc');
-var Canvas = require('canvas');
-var net = require('net');
+const EventEmitter = require('events');
+const util = require('util');
+const sys = require('sys');
+const fs = require('fs');
+const exec = require('child_process').exec;
+const VNC = require('./vnc');
+const Canvas = require('canvas');
+const net = require('net');
 
-var hostName = process.env.ANDROID_VNC_HOST || '127.0.0.1';
-var port = 5902;
-var tcp = process.env.ANDROID_TCP || '127.0.0.1:5555';
+const hostName = process.env.ANDROID_VNC_HOST || '127.0.0.1';
+const port = 5902;
+const tcp = process.env.ANDROID_TCP || '127.0.0.1:5555';
 
 function Android() {
   if (!(this instanceof Android)) return new Android();
@@ -18,14 +18,14 @@ function Android() {
 
 util.inherits(Android, EventEmitter);
 
-Android.prototype.closed = function() {
+Android.prototype.closed = () => {
   this.running = false;
   setTimeout(this.run, 100);
   return;
 };
 
-Android.prototype.run = function() {
-  var self = this;
+Android.prototype.run = () => {
+  const self = this;
 
   try {
     this.vnc = new VNC(hostName, port);
@@ -35,11 +35,11 @@ Android.prototype.run = function() {
   }
 
   try {
-    var split = tcp.split(':');
-    var tcpHost = split[0];
-    var tcpPort = split[1];
+    const split = tcp.split(':');
+    const tcpHost = split[0];
+    const tcpPort = split[1];
     this.tcp = net.connect({host: tcpHost, port: tcpPort});
-    this.tcp.on('end', function() {
+    this.tcp.on('end', () => {
       return self.closed();
     });
   } catch(e) {
@@ -47,7 +47,7 @@ Android.prototype.run = function() {
     return self.closed();
   }
 
-  this.vnc.on('connect', function() {
+  this.vnc.on('connect', () => {
     console.log('successfully connected via vnc and authorised');
     fs.writeFile('message.txt', 'Hello Node.js', (err) => {
       if (err) throw err;
@@ -55,15 +55,15 @@ Android.prototype.run = function() {
     });
   });
 
-  this.vnc.on('copy', function(rect){
+  this.vnc.on('copy', (rect) => {
     self.emit('copy', rect);
   });
 
-  this.vnc.on('raw', function(frame){
+  this.vnc.on('raw', (frame) => {
     self.emit('raw', frame);
   });
 
-  this.vnc.on('frame', function(frame){
+  this.vnc.on('frame', (frame) => {
     self.emit('frame', frame);
   });
 

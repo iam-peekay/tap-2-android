@@ -1,4 +1,4 @@
-var forever = require('forever-monitor');
+const forever = require('forever-monitor');
 
 function startEmu() {
   var child = new (forever.Monitor)('emulator.js', {
