@@ -4,6 +4,7 @@
   "description": "An application that enables everyone to provision their own Android instance, and stream it over the network",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,5 +30,10 @@
     "socket.io-client": "^1.4.4",
     "socket.io-emitter": "^1.0.0",
     "socket.io-redis": "^1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^4.0.0",
+    "eslint-plugin-react": "^3.16.1"
   }
 }

@@ -1,38 +1,37 @@
-var fs = require('fs');
-var Android = require('./android');
+const Android = require('./android');
+const debug = require('debug');
+const io = require('socket.io-emitter');
 
 process.title = 'socket.io-android-emulator';
 
 // load computer emulator
-var emu;
-
-function load() {
+function loadEmulator() {
   debug('loading emulator');
-  emu = new Android();
 
-  emu.on('error', function() {
-    console.log(new Date + ' - restarting emulator');
-    emu.destroy();
-    setTimeout(load, 1000);
+  const emulator = new Android();
+
+  emulator.on('error', () => {
+    console.log('Restarting emulator');
+    emulator.destroy();
+    setTimeout(loadEmulator, 1000);
   });
 
-  emu.on('raw', function(frame) {
+  emulator.on('raw', (frame) => {
     io.emit('raw', frame);
   });
 
-  emu.on('frame', function(buf) {
-    redis.set('computer:frame', buf);
+  emulator.on('frame', (buf) => {
+    io.emit('frame', buf);
   });
 
-  emu.on('copy', function(rect) {
+  emulator.on('copy', (rect) => {
     io.emit('copy', rect);
   });
 
-  setTimeout(function() {
+  setTimeout(() => {
     console.log('running android emulator');
-    emu.run();
+    emulator.run();
   }, 2000);
-
 }
 
-load();
+module.exports = loadEmulator;
