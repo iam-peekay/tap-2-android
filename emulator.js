@@ -1,6 +1,7 @@
 const Android = require('./android');
 const debug = require('debug');
-const io = require('socket.io-emitter');
+const redis = require('./redis').emulator();
+const io = require('socket.io-emitter')(redis);
 
 process.title = 'socket.io-android-emulator';
 
@@ -15,6 +16,10 @@ function loadEmulator() {
     emulator.destroy();
     setTimeout(loadEmulator, 1000);
   });
+
+  emulator.on('connect', () => {
+    io.emit('success');
+  })
 
   emulator.on('raw', (frame) => {
     io.emit('raw', frame);

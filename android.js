@@ -36,9 +36,8 @@ Android.prototype.closed = () => {
   return;
 };
 
-Android.prototype.run = () => {
+Android.prototype.run = function() {
   const self = this;
-
   try {
     this.vnc = new VNC(hostName, port);
   } catch (e) {
@@ -58,7 +57,8 @@ Android.prototype.run = () => {
   }
 
   this.vnc.on('connect', () => {
-    console.log('successfully connected via vnc and authorised');
+    self.emit('connect');
+    console.log('successfully connected via vnc and authorized');
   });
 
   this.vnc.on('copy', (rect) => {

@@ -14,7 +14,17 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+        <p>Hello world!</p>
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+        var socket = io.connect('http://localhost:8000');
+        socket.on('connect', function(){
+          console.log('connection on client');
+        });
 
+        socket.on('raw', function (data) {
+          console.log(data);
+        });
+      </script>
     </body>
 </html>

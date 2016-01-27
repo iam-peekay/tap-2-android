@@ -29,15 +29,21 @@ function VNC(host, port) {
 }
 
 util.inherits(VNC, EventEmitter);
-
 // TODO: Implement draw rect: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/putImageData
-VNC.prototype.drawRect = (rect) => {
+VNC.prototype.drawRect = function(rect) {
   switch (rect.encoding) {
     case rfb.encodings.raw:
       // rect.x, rect.y, rect.width, rect.height, rect.data
       // pixmap format is in r.bpp, r.depth, r.redMask, greenMask,
       // blueMask, redShift, greenShift, blueShift
       console.log('raw: ', rect.x, rect.y, rect.width, rect.height, rect.data);
+      this.emit('raw', {
+        x: rect.x,
+        y: rect.y,
+        width: rect.width,
+        height: rect.height,
+        // image: img
+      });
       break;
     case rfb.encodings.copyRect:
       // pseudo-rectangle
@@ -56,5 +62,6 @@ VNC.prototype.drawRect = (rect) => {
 //   const ctx = canvas.getContext('2d');
 //   console.log('<img src="' + canvas.toDataURL() + '" />');
 // }
+
 
 module.exports = VNC;
