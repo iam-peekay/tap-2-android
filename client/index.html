@@ -15,16 +15,7 @@
 
         <!-- Add your site or application content here -->
         <p>Hello world!</p>
-      <script src="/socket.io/socket.io.js"></script>
-      <script>
-        var socket = io.connect('http://localhost:8000');
-        socket.on('connect', function(){
-          console.log('connection on client');
-        });
-
-        socket.on('raw', function (data) {
-          console.log(data);
-        });
-      </script>
+        <img id="canvas"></img>
+      <script src="/static/bundle.js"></script>
     </body>
 </html>

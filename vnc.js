@@ -1,9 +1,9 @@
 const EventEmitter = require('events');
 const util = require('util');
 const rfb = require('rfb2');
+const fs = require('fs');
 // const exec = require('child_process').exec;
 const Canvas = require('canvas');
-// const Image = Canvas.Image;
 
 function VNC(host, port) {
   EventEmitter.call(this);
@@ -29,39 +29,48 @@ function VNC(host, port) {
 }
 
 util.inherits(VNC, EventEmitter);
-// TODO: Implement draw rect: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/putImageData
+
 VNC.prototype.drawRect = function(rect) {
-  switch (rect.encoding) {
-    case rfb.encodings.raw:
-      // rect.x, rect.y, rect.width, rect.height, rect.data
-      // pixmap format is in r.bpp, r.depth, r.redMask, greenMask,
-      // blueMask, redShift, greenShift, blueShift
-      console.log('raw: ', rect.x, rect.y, rect.width, rect.height, rect.data);
-      this.emit('raw', {
-        x: rect.x,
-        y: rect.y,
-        width: rect.width,
-        height: rect.height,
-        // image: img
-      });
-      break;
-    case rfb.encodings.copyRect:
-      // pseudo-rectangle
-      // copy rectangle from rect.src.x, rect.src.y, rect.width,
-      // rect.height, to rect.x, rect.y
-      console.log('copy of rect: ', rect.width, rect.height, rect.x, rect.y);
-      break;
-    default:
-      return 'No encoding';
+  if (rect.encoding === undefined) {
+    return;
+  } else if (rect.encoding === rfb.encodings.copyRect) {
+    this.emit('copy', rect);
+    return;
+  } else if (rect.encoding === rfb.encodings.raw) {
+    console.log('raw: ', rect.x, rect.y, rect.width, rect.height, rect.data);
+    this.emit('raw', drawImage(rect.x, rect.y, rect.width, rect.height, rect.data));
   }
 };
 
-// TODO
-// const drawImage = (x, y) => {
-//   const canvas = new Canvas(x, y);
-//   const ctx = canvas.getContext('2d');
-//   console.log('<img src="' + canvas.toDataURL() + '" />');
-// }
+
+const drawImage = (dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
+  const canvas = new Canvas(width, height);
+  const ctx = canvas.getContext('2d');
+  dirtyX = dirtyX || 0;
+  dirtyY = dirtyY || 0;
+  dirtyWidth = dirtyWidth !== undefined ? dirtyWidth : width;
+  dirtyHeight = dirtyHeight !== undefined ? dirtyHeight : height;
+  var limitBottom = dirtyY + dirtyHeight;
+  var limitRight = dirtyX + dirtyWidth;
+  for (var y = dirtyY; y < limitBottom; y++) {
+    for (var x = dirtyX; x < limitRight; x++) {
+      var pos = y * width + x;
+      ctx.fillStyle = 'rgba(' + imageData[pos*4+0]
+                        + ',' + imageData[pos*4+1]
+                        + ',' + imageData[pos*4+2]
+                        + ',' + '1' + ')';
+
+      ctx.fillRect(x + dx, y + dy, 1, 1);
+    }
+  }
+
+  // canvas.toBuffer(function(err, buffer){
+  //   if (err) throw err;
+  //   fs.writeFile(__dirname + '/test.png', buffer);
+  // });
+
+  return canvas.toDataURL();
+}
 
 
 module.exports = VNC;

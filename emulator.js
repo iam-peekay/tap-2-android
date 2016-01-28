@@ -1,5 +1,4 @@
 const Android = require('./android');
-const debug = require('debug');
 const redis = require('./redis').emulator();
 const io = require('socket.io-emitter')(redis);
 
@@ -7,7 +6,6 @@ process.title = 'socket.io-android-emulator';
 
 // load computer emulator
 function loadEmulator() {
-  debug('loading emulator');
 
   const emulator = new Android();
 

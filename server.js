@@ -1,3 +1,7 @@
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+const config = require('./webpack.config');
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -8,6 +12,7 @@ const io = require('socket.io')(server);
 const redis = require('socket.io-redis');
 const port = process.env.PORT || 8000;
 const uri = require('./redis').uri;
+const compiler = webpack(config);
 
 io.adapter(redis(uri));
 
@@ -19,11 +24,20 @@ server.listen(port, (error) => {
   }
 });
 
+app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
+app.use(webpackHotMiddleware(compiler));
+app.use(express.static(path.join(__dirname, '/public')));
+
+app.get('/dist', (req, res) => {
+  console.log('got here');
+  res.sendFile(path.join(__dirname, 'dist/bundle.js'));
+});
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/index.html'));
 });
 
-app.use(express.static(path.join(__dirname, '/public')));
+
 
 process.title = 'socket.io-android-emulator';
 
