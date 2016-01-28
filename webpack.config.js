@@ -24,6 +24,7 @@ module.exports = {
     loaders: [
       { test: /\.js$/, loaders: [ 'babel'], exclude: /node_modules/ },
       { test: /\.jsx$/, loaders: [ 'babel'], exclude: /node_modules/ },
+      { test: /\.(jpe?g|png|gif|svg)$/i, loader: 'url?limit=10000!img?progressive=true' }
     ]
   },
   eslint: {

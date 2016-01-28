@@ -1,9 +1,8 @@
 /* global URL */
 
-/* dependencies */
 const Blob = require('blob');
 
-function blobToImage(imageData) {
+export default function blobToImage(imageData) {
   let image;
   if (Blob && typeof URL !== 'undefined') {
     const blob = new Blob([imageData], { type: 'image/jpeg' });
@@ -16,5 +15,3 @@ function blobToImage(imageData) {
 
   return image;
 }
-
-export default blobToImage;

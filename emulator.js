@@ -24,7 +24,7 @@ function loadEmulator() {
   });
 
   emulator.on('frame', (buf) => {
-    io.emit('frame', buf);
+    redis.set('Android:frame', buf);
   });
 
   emulator.on('copy', (rect) => {

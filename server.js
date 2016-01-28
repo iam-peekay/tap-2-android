@@ -13,6 +13,7 @@ const redis = require('socket.io-redis');
 const port = process.env.PORT || 8000;
 const uri = require('./redis').uri;
 const compiler = webpack(config);
+const redisMobile = require('./redis').mobile();
 
 io.adapter(redis(uri));
 
@@ -33,7 +34,14 @@ app.get('/dist', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/bundle.js'));
 });
 
-app.get('/', (req, res) => {
+app.get('/', (req, res, next) => {
+  redisMobile.get('Android:frame', (err, image) => {
+    if (err) {
+      return next(err);
+    } else {
+      console.log(image, 'image');
+    }
+  });
   res.sendFile(path.join(__dirname, 'client/index.html'));
 });
 

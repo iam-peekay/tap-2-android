@@ -8,5 +8,6 @@ const redisClient = () => {
 
 module.exports = {
   uri,
-  emulator: redisClient
+  emulator: redisClient,
+  mobile: redisClient,
 };
