@@ -34,6 +34,7 @@ VNC.prototype.drawRect = function(rect) {
   if (rect.encoding === undefined) {
     return;
   } else if (rect.encoding === rfb.encodings.copyRect) {
+    console.log('copy', rect.src)
     this.emit('copy', rect);
     return;
   } else if (rect.encoding === rfb.encodings.raw) {
@@ -56,29 +57,12 @@ VNC.prototype.drawRect = function(rect) {
     // first frame
     this.state = img;
     this.state.push(img);
+    this.emit('frame', img);
   } else {
     this.state.push(img);
   }
 
-  this.emit('frame', img);
-
 };
-
-function encodeFrame(rect) {
-  var rgb = new Buffer(rect.width * rect.height * 3, 'binary');
-  var offset = 0;
-
-  for (var i = 0; i < rect.data.length; i += 4) {
-    rgb[offset] = rect.data[i + 2];
-    offset += 1;
-    rgb[offset] = rect.data[i + 1];
-    offset += 1;
-    rgb[offset] = rect.data[i];
-    offset += 1;
-  }
-  var image = new PNG(rgb, rect.width, rect.height, 'rgb');
-  return image;
-}
 
 const drawImage = (dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
   const canvas = new Canvas(width, height);
@@ -98,12 +82,24 @@ const drawImage = (dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth,
       ctx.fillRect(x + dx, y + dy, 1, 1);
     }
   }
-  // canvas.toBuffer(function(err, buffer){
-  //   if (err) throw err;
-  //   fs.writeFile(__dirname + '/test.png', buffer);
-  // });
-
   return canvas.toDataURL();
+}
+
+
+function encodeFrame(rect) {
+  var rgb = new Buffer(rect.width * rect.height * 3, 'binary');
+  var offset = 0;
+
+  for (var i = 0; i < rect.data.length; i += 4) {
+    rgb[offset] = rect.data[i + 2];
+    offset += 1;
+    rgb[offset] = rect.data[i + 1];
+    offset += 1;
+    rgb[offset] = rect.data[i];
+    offset += 1;
+  }
+  var image = new PNG(rgb, rect.width, rect.height, 'rgb');
+  return image;
 }
 
 
