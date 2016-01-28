@@ -39,8 +39,9 @@ VNC.prototype.drawRect = function(rect) {
   } else if (rect.encoding === rfb.encodings.raw) {
     console.log('raw: ', rect.x, rect.y, rect.width, rect.height, rect.data);
 
-    // var img = encodeFrame(rect).toString('base64');
+    // var img = encodeFrame(rect).toDataURL();
     var img = drawImage(rect.x, rect.y, rect.width, rect.height, rect.data);
+
     this.emit('raw', {
       x: rect.x,
       y: rect.y,
@@ -62,7 +63,6 @@ VNC.prototype.drawRect = function(rect) {
   this.emit('frame', img);
 
 };
-
 
 function encodeFrame(rect) {
   var rgb = new Buffer(rect.width * rect.height * 3, 'binary');
@@ -92,15 +92,12 @@ const drawImage = (dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth,
   for (var y = dirtyY; y < limitBottom; y++) {
     for (var x = dirtyX; x < limitRight; x++) {
       var pos = y * width + x;
-      ctx.fillStyle = 'rgba(' + imageData[pos * 4 + 0]
+      ctx.fillStyle = 'rgb(' + imageData[pos * 4 + 0]
                         + ',' + imageData[pos * 4 + 1]
-                        + ',' + imageData[pos * 4 + 2]
-                        + ',' + (imageData[pos * 4 + 3]/255) + ')';
-
+                        + ',' + imageData[pos * 4 + 2] + ')';
       ctx.fillRect(x + dx, y + dy, 1, 1);
     }
   }
-
   // canvas.toBuffer(function(err, buffer){
   //   if (err) throw err;
   //   fs.writeFile(__dirname + '/test.png', buffer);

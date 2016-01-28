@@ -14,6 +14,7 @@ const port = process.env.PORT || 8000;
 const uri = require('./redis').uri;
 const compiler = webpack(config);
 const redisMobile = require('./redis').mobile();
+const mustache = require('mustache-express');
 
 io.adapter(redis(uri));
 
@@ -27,7 +28,8 @@ server.listen(port, (error) => {
 
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
 app.use(webpackHotMiddleware(compiler));
-app.use(express.static(path.join(__dirname, '/public')));
+app.engine('mustache', mustache());
+app.set('views', __dirname + '/views');
 
 app.get('/dist', (req, res) => {
   console.log('got here');
@@ -39,10 +41,11 @@ app.get('/', (req, res, next) => {
     if (err) {
       return next(err);
     } else {
-      console.log(image, 'image');
+      res.render('index.mustache', {
+        img: image ? image : ''
+      });
     }
   });
-  res.sendFile(path.join(__dirname, 'client/index.html'));
 });
 
 
