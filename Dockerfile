@@ -1,10 +1,10 @@
 # Android development environment for ubuntu precise (12.04 LTS) (i386).
-# version 0.0.3
+# version 0.0.4
 
 # Start with ubuntu 12.04 (i386).
 FROM ubuntu:12.04
 
-MAINTAINER tracer0tong <yuriy.leonychev@gmail.com>
+MAINTAINER preethi kasireddy iam.preethi.k@gmail.com
 
 # Specially for SSH access and port redirection
 ENV ROOTPASSWORD android
@@ -50,8 +50,8 @@ RUN mv apache-ant-1.8.4 /usr/local/apache-ant
 
 # Add android tools and platform tools to PATH
 ENV ANDROID_HOME /usr/local/android-sdk
-ENV PATH $PATH:$ANDROID_HOME/tools
-ENV PATH $PATH:$ANDROID_HOME/platform-tools
+ENV PATH $PATH:$ANDROID_HOME/tools:$PATH
+ENV PATH $PATH:$ANDROID_HOME/platform-tools:$PATH
 
 # Add ant to PATH
 ENV ANT_HOME /usr/local/apache-ant
@@ -68,20 +68,17 @@ RUN chown -R root:root /usr/local/android-sdk/
 
 # Install latest android tools and system images
 RUN echo "y" | android update sdk --filter platform-tool --no-ui --force
-RUN echo "y" | android update sdk --filter tools --no-ui --force
 RUN echo "y" | android update sdk --filter platform --no-ui --force
 RUN echo "y" | android update sdk --filter build-tools-22.0.1 --no-ui -a
-RUN echo "y" | android update sdk --filter sys-img-x86-android-10 --no-ui -a
-RUN echo "y" | android update sdk --filter sys-img-x86-android-18 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-19 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-21 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-22 --no-ui -a
-RUN echo "y" | android update sdk --filter sys-img-x86-android-23 --no-ui -a
+RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-19 --no-ui -a
+RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-21 --no-ui -a
+RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-22 --no-ui -a
 
 # Update ADB
 RUN echo "y" | android update adb
-#RUN adb kill-server
-#RUN adb start-server
 
 # Create fake keymap file
 RUN mkdir /usr/local/android-sdk/tools/keymaps
@@ -106,4 +103,4 @@ RUN apt-get install -y socat
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["-e","android-19"]
+CMD ["-e","android-19","-a","armeabi-v7a"]

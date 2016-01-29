@@ -1,19 +1,24 @@
 SHELL := /bin/bash
-ALIAS = "android"
+ALIAS = "android_emulator_machine"
 EXISTS := $(shell docker ps -a -q -f name=$(ALIAS))
 RUNNED := $(shell docker ps -q -f name=$(ALIAS))
 ifneq "$(RUNNED)" ""
 IP := $(shell docker inspect $(ALIAS) | grep "IPAddress\"" | head -n1 | cut -d '"' -f 4)
 endif
 STALE_IMAGES := $(shell docker images | grep "<none>" | awk '{print($$3)}')
-EMULATOR ?= "android-19"
+EMULATOR ?= "android-22"
+ARCH ?= "armeabi-v7a"
 
 COLON := :
 
 .PHONY = run ports kill ps
 
+all:
+	@docker build -q -t android_emulator .
+	@docker images
+
 run: clean
-	@docker build .
+	@docker run -d -P --name android_emulator_machine --log-driver=json-file android_emulator -e $(EMULATOR) -a $(ARCH)
 
 ports:
 ifneq "$(RUNNED)" ""
