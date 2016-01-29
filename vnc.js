@@ -82,6 +82,7 @@ const drawImage = (dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth,
       ctx.fillRect(x + dx, y + dy, 1, 1);
     }
   }
+
   return canvas.toDataURL();
 }
 
@@ -104,3 +105,8 @@ function encodeFrame(rect) {
 
 
 module.exports = VNC;
+
+
+// emulator -avd Nexus_5_API_23 -no-window -qemu -vnc :2
+// sudo lsof -i -n -P | grep TCP
+// adb kill-server

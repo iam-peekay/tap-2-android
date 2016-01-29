@@ -24,8 +24,12 @@ module.exports = {
     loaders: [
       { test: /\.js$/, loaders: [ 'babel'], exclude: /node_modules/ },
       { test: /\.jsx$/, loaders: [ 'babel'], exclude: /node_modules/ },
-      { test: /\.(jpe?g|png|gif|svg)$/i, loader: 'url?limit=10000!img?progressive=true' }
+      { test: /\.(jpe?g|png|gif|svg)$/i, loader: 'url?limit=10000!img?progressive=true' },
+      { include: /\.json$/, loaders: ['json-loader'] }
     ]
+  },
+  resolve: {
+    extensions: ['', '.json', '.jsx', '.js']
   },
   eslint: {
     formatter: require("eslint-friendly-formatter"),

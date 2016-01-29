@@ -38,4 +38,4 @@ socat tcp-listen:5555,bind=$ip,fork tcp:127.0.0.1:5555 &
 
 # Set up and run emulator
 echo "no" | /usr/local/android-sdk/tools/android create avd -f -n test -t ${EMULATOR} --abi default/x86
-echo "no" | /usr/local/android-sdk/tools/emulator64-x86 -avd test -noaudio -no-window -gpu off -verbose -qemu -usbdevice tablet -vnc :0
+echo "no" | /usr/local/android-sdk/tools/emulator64-x86 -avd test -noaudio -no-window -gpu off -verbose -qemu -vnc :0
