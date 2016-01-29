@@ -48,13 +48,12 @@ app.get('/', (req, res, next) => {
   });
 });
 
-
-
 process.title = 'socket.io-android-emulator';
 
 // Load Android emulator
 emulator();
 
+// Socket-io connection and event handlers 
 io.on('connection', (socket) => {
   console.log('socketio server connection');
   socket.on('disconnect', () => {

@@ -2,7 +2,6 @@ const EventEmitter = require('events');
 const util = require('util');
 const rfb = require('rfb2');
 const fs = require('fs');
-const PNG = require('node-png').PNG;
 const Canvas = require('canvas');
 
 function VNC(host, port) {
@@ -40,8 +39,7 @@ VNC.prototype.drawRect = function(rect) {
   } else if (rect.encoding === rfb.encodings.raw) {
     console.log('raw: ', rect.x, rect.y, rect.width, rect.height, rect.data);
 
-    // var img = encodeFrame(rect).toDataURL();
-    var img = drawImage(rect.x, rect.y, rect.width, rect.height, rect.data);
+    var img = putImage(rect.x, rect.y, rect.width, rect.height, rect.data);
 
     this.emit('raw', {
       x: rect.x,
@@ -53,6 +51,7 @@ VNC.prototype.drawRect = function(rect) {
     });
   }
 
+  // TODO: need to fix this part
   if (!this.state) {
     // first frame
     this.state = img;
@@ -64,15 +63,21 @@ VNC.prototype.drawRect = function(rect) {
 
 };
 
-const drawImage = (dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
+module.exports = VNC;
+
+const putImage = (dx, dy, width, height, data, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
   const canvas = new Canvas(width, height);
   const ctx = canvas.getContext('2d');
   dirtyX = dirtyX || 0;
   dirtyY = dirtyY || 0;
   dirtyWidth = dirtyWidth !== undefined ? dirtyWidth : width;
   dirtyHeight = dirtyHeight !== undefined ? dirtyHeight : height;
-  var limitBottom = dirtyY + dirtyHeight;
-  var limitRight = dirtyX + dirtyWidth;
+  const limitBottom = dirtyY + dirtyHeight;
+  const limitRight = dirtyX + dirtyWidth;
+  const imageData = ctx.createImageData(frameData.width, frameData.height);
+  const dataForImage = new Uint8ClampedArray(data);
+  imageData.data.set(dataForImage);
+
   for (var y = dirtyY; y < limitBottom; y++) {
     for (var x = dirtyX; x < limitRight; x++) {
       var pos = y * width + x;
@@ -82,30 +87,8 @@ const drawImage = (dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth,
       ctx.fillRect(x + dx, y + dy, 1, 1);
     }
   }
-
-  return canvas.toDataURL();
+  return canvas.toDataUrl();
 }
-
-
-function encodeFrame(rect) {
-  var rgb = new Buffer(rect.width * rect.height * 3, 'binary');
-  var offset = 0;
-
-  for (var i = 0; i < rect.data.length; i += 4) {
-    rgb[offset] = rect.data[i + 2];
-    offset += 1;
-    rgb[offset] = rect.data[i + 1];
-    offset += 1;
-    rgb[offset] = rect.data[i];
-    offset += 1;
-  }
-  var image = new PNG(rgb, rect.width, rect.height, 'rgb');
-  return image;
-}
-
-
-module.exports = VNC;
-
 
 // emulator -avd Nexus_5_API_23 -no-window -qemu -vnc :2
 // sudo lsof -i -n -P | grep TCP
