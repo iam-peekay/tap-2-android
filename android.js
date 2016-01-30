@@ -14,10 +14,14 @@ const net = require('net');
 * emulator instances can run a console facility.
 */
 
-const hostName = process.env.ANDROID_VNC_HOST || '127.0.0.1';
+
 // Built-in android emulator VNC port.
-const port = process.env.ANDROID_VNC_PORT || 5902;
-const tcp = process.env.ANDROID_TCP || '127.0.0.1:5555';
+// const hostName = process.env.ANDROID_VNC_HOST || '127.0.0.1';
+// const port = process.env.ANDROID_VNC_PORT || 5902;
+// const tcp = process.env.ANDROID_TCP || '127.0.0.1:5555';
+const hostName = process.env.ANDROID_VNC_HOST || '192.168.99.100';
+const port = process.env.ANDROID_VNC_PORT || 32793;
+const tcp = process.env.ANDROID_TCP || '192.168.99.100:32794';
 
 // Android emulator constructor function
 function Android() {

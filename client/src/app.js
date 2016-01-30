@@ -1,7 +1,6 @@
 /* eslint-disable */
 /* global URL */
 
-const q2 = Queue();
 const io = require('socket.io-client');
 const socket = io.connect('http://localhost:8000');
 const emuWidth = 1080;
@@ -20,6 +19,7 @@ socket.on('raw', function (frameData) {
   if (!frameData) {
     return;
   }
+  console.log(frameData);
 
   if (!replaced) {
     let divImage = document.getElementById('emulator-window');

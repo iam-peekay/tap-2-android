@@ -46,8 +46,7 @@ VNC.prototype.drawRect = function(rect) {
       y: rect.y,
       width: rect.width,
       height: rect.height,
-      data: rect.data,
-      image: img
+      data: rect.data
     });
   }
 
@@ -74,7 +73,7 @@ const putImage = (dx, dy, width, height, data, dirtyX, dirtyY, dirtyWidth, dirty
   dirtyHeight = dirtyHeight !== undefined ? dirtyHeight : height;
   const limitBottom = dirtyY + dirtyHeight;
   const limitRight = dirtyX + dirtyWidth;
-  const imageData = ctx.createImageData(frameData.width, frameData.height);
+  const imageData = ctx.createImageData(width, height);
   const dataForImage = new Uint8ClampedArray(data);
   imageData.data.set(dataForImage);
 
@@ -87,9 +86,13 @@ const putImage = (dx, dy, width, height, data, dirtyX, dirtyY, dirtyWidth, dirty
       ctx.fillRect(x + dx, y + dy, 1, 1);
     }
   }
-  return canvas.toDataUrl();
+  return canvas.toDataURL();
 }
 
 // emulator -avd Nexus_5_API_23 -no-window -qemu -vnc :2
 // sudo lsof -i -n -P | grep TCP
 // adb kill-server
+// docker inspect --format '{{ .NetworkSettings.IPAddress }}'
+// clean all containers: docker ps -a | sed '1 d' | awk '{print $1}' | xargs -L1 docker rm
+// clean all images: docker images -a | sed '1 d' | awk '{print $3}' | xargs -L1 docker rmi -f
+// run arbitrary commands inside an existing container: docker exec -it <mycontainer> bash 

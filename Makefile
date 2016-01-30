@@ -6,7 +6,7 @@ ifneq "$(RUNNED)" ""
 IP := $(shell docker inspect $(ALIAS) | grep "IPAddress\"" | head -n1 | cut -d '"' -f 4)
 endif
 STALE_IMAGES := $(shell docker images | grep "<none>" | awk '{print($$3)}')
-EMULATOR ?= "android-22"
+EMULATOR ?= "android-19"
 ARCH ?= "armeabi-v7a"
 
 COLON := :
