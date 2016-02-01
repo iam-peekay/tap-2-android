@@ -39,8 +39,8 @@ RUN apt-get update
 RUN apt-get -y install oracle-java7-installer
 
 # Install android sdk
-RUN wget http://dl.google.com/android/android-sdk_r23-linux.tgz
-RUN tar -xvzf android-sdk_r23-linux.tgz
+RUN wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
+RUN tar -xvzf android-sdk_r24.4.1-linux.tgz
 RUN mv android-sdk-linux /usr/local/android-sdk
 
 # Install apache ant
@@ -61,7 +61,7 @@ ENV PATH $PATH:$ANT_HOME/bin
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
 
 # Remove compressed files.
-RUN cd /; rm android-sdk_r23-linux.tgz && rm apache-ant-1.8.4-bin.tar.gz
+RUN cd /; rm android-sdk_24.4.1-linux.tgz && rm apache-ant-1.8.4-bin.tar.gz
 
 # Some preparation before update
 RUN chown -R root:root /usr/local/android-sdk/

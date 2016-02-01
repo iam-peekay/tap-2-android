@@ -20,8 +20,9 @@ const net = require('net');
 // const port = process.env.ANDROID_VNC_PORT || 5902;
 // const tcp = process.env.ANDROID_TCP || '127.0.0.1:5555';
 const hostName = process.env.ANDROID_VNC_HOST || '192.168.99.100';
-const port = process.env.ANDROID_VNC_PORT || 32793;
-const tcp = process.env.ANDROID_TCP || '192.168.99.100:32794';
+const port = process.env.ANDROID_VNC_PORT || 32828;
+const tcp = process.env.ANDROID_TCP || '192.168.99.100:32828';
+//const tcp = process.env.ANDROID_TCP || '192.168.99.100:32804';
 
 // Android emulator constructor function
 function Android() {
