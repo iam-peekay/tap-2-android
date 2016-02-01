@@ -1,4 +1,5 @@
 /* global URL */
+/* eslint-disable */
 
 const Blob = require('blob');
 const PNG = require('node-png').PNG;
@@ -48,9 +49,32 @@ export const bufferToImage = (arrayBuffer) => {
     return imageUrl;
 };
 
-export const putImage = (dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
-  const canvas = new Canvas(width, height);
-  const ctx = canvas.getContext('2d');
+export const putImage = (ctx, dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
+  var data = imageData.data;
+  var height = imageData.height;
+  var width = imageData.width;
+  dirtyX = dirtyX || 0;
+  dirtyY = dirtyY || 0;
+  dirtyWidth = dirtyWidth !== undefined? dirtyWidth: width;
+  dirtyHeight = dirtyHeight !== undefined? dirtyHeight: height;
+  var limitBottom = dirtyY + dirtyHeight;
+  var limitRight = dirtyX + dirtyWidth;
+  for (var y = dirtyY; y < limitBottom; y++) {
+    for (var x = dirtyX; x < limitRight; x++) {
+      var pos = y * width + x;
+      ctx.fillStyle = 'rgba(' + data[pos*4+0]
+                        + ',' + data[pos*4+1]
+                        + ',' + data[pos*4+2]
+                        + ',' + (data[pos*4+3]/255) + ')';
+      ctx.fillRect(x + dx, y + dy, 1, 1);
+    }
+  }
+}
+
+export const putImageNew = (ctx, dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
+  var data = imageData.data;
+  var height = imageData.height;
+  var width = imageData.width;
   dirtyX = dirtyX || 0;
   dirtyY = dirtyY || 0;
   dirtyWidth = dirtyWidth !== undefined ? dirtyWidth : width;
@@ -60,9 +84,16 @@ export const putImage = (dx, dy, width, height, imageData, dirtyX, dirtyY, dirty
   for (var y = dirtyY; y < limitBottom; y++) {
     for (var x = dirtyX; x < limitRight; x++) {
       var pos = y * width + x;
-      ctx.fillStyle = 'rgb(' + imageData[pos * 4 + 0]
-                        + ',' + imageData[pos * 4 + 1]
-                        + ',' + imageData[pos * 4 + 2] + ')';
+      var copy1 = data[pos * 2 + 0];
+      var copy2 = data[pos * 2 + 1];
+      var r = ((copy1 >>> 4) / 15) * 100;
+      var g = ((copy1 & 15) / 15) * 100;
+      var b = ((copy2 >>> 4) / 15) * 100;
+      var a = (copy2 & 15) / 15;
+      ctx.fillStyle = 'rgba(' + r + '%'
+                        + ',' + g + '%'
+                        + ',' + b + '%'
+                        + ',' + a/255 + ')';
       ctx.fillRect(x + dx, y + dy, 1, 1);
     }
   }

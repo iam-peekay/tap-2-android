@@ -22,6 +22,7 @@ function VNC(host, port) {
     console.log('successfully connected to VNC!');
     console.log(`Remote screen name: ${this.r.title}, Width:
     ${this.r.width}, Height: ${this.r.height}`);
+    console.log(this.r);
   });
 
   this.r.on('rect', this.drawRect.bind(this));
@@ -38,6 +39,7 @@ VNC.prototype.drawRect = function(rect) {
     return;
   } else if (rect.encoding === rfb.encodings.raw) {
     console.log('raw: ', rect.x, rect.y, rect.width, rect.height, rect.data);
+    console.log('rect', rect)
 
     var img = putImage(rect.x, rect.y, rect.width, rect.height, rect.data);
 
@@ -46,7 +48,10 @@ VNC.prototype.drawRect = function(rect) {
       y: rect.y,
       width: rect.width,
       height: rect.height,
-      data: rect.data
+      data: rect.data,
+      redShift: this.r.redShift,
+      blueShift: this.r.blueShift,
+      greenShift: this.r.greenShift
     });
   }
 
@@ -95,4 +100,5 @@ const putImage = (dx, dy, width, height, data, dirtyX, dirtyY, dirtyWidth, dirty
 // docker inspect --format '{{ .NetworkSettings.IPAddress }}'
 // clean all containers: docker ps -a | sed '1 d' | awk '{print $1}' | xargs -L1 docker rm
 // clean all images: docker images -a | sed '1 d' | awk '{print $3}' | xargs -L1 docker rmi -f
-// run arbitrary commands inside an existing container: docker exec -it <mycontainer> bash 
+// run arbitrary commands inside an existing container: docker exec -it <mycontainer> bash
+// https://wiki.archlinux.org/index.php/QEMU#Mouse_integration
