@@ -43,6 +43,9 @@ RUN wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
 RUN tar -xvzf android-sdk_r24.4.1-linux.tgz
 RUN mv android-sdk-linux /usr/local/android-sdk
 
+# Install fastdroid VNC server
+RUN wget ‐‐directory-prefix=/usr/local/ https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/fastdroid-vnc/fastdroid-vnc
+
 # Install apache ant
 RUN wget http://archive.apache.org/dist/ant/binaries/apache-ant-1.8.4-bin.tar.gz
 RUN tar -xvzf apache-ant-1.8.4-bin.tar.gz
@@ -61,7 +64,7 @@ ENV PATH $PATH:$ANT_HOME/bin
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
 
 # Remove compressed files.
-RUN cd /; rm android-sdk_24.4.1-linux.tgz && rm apache-ant-1.8.4-bin.tar.gz
+RUN cd /; rm android-sdk_24.4.1-linux.tgz && rm apache-ant-1.8.4-bin.tar.gz && rm fastdroid-vnc
 
 # Some preparation before update
 RUN chown -R root:root /usr/local/android-sdk/

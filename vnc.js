@@ -41,7 +41,6 @@ VNC.prototype.drawRect = function(rect) {
     console.log('raw: ', rect.x, rect.y, rect.width, rect.height, rect.data);
     console.log('rect', rect)
 
-    var img = putImage(rect.x, rect.y, rect.width, rect.height, rect.data);
 
     this.emit('raw', {
       x: rect.x,
@@ -54,45 +53,9 @@ VNC.prototype.drawRect = function(rect) {
       greenShift: this.r.greenShift
     });
   }
-
-  // TODO: need to fix this part
-  if (!this.state) {
-    // first frame
-    this.state = img;
-    this.state.push(img);
-    this.emit('frame', img);
-  } else {
-    this.state.push(img);
-  }
-
 };
 
 module.exports = VNC;
-
-const putImage = (dx, dy, width, height, data, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
-  const canvas = new Canvas(width, height);
-  const ctx = canvas.getContext('2d');
-  dirtyX = dirtyX || 0;
-  dirtyY = dirtyY || 0;
-  dirtyWidth = dirtyWidth !== undefined ? dirtyWidth : width;
-  dirtyHeight = dirtyHeight !== undefined ? dirtyHeight : height;
-  const limitBottom = dirtyY + dirtyHeight;
-  const limitRight = dirtyX + dirtyWidth;
-  const imageData = ctx.createImageData(width, height);
-  const dataForImage = new Uint8ClampedArray(data);
-  imageData.data.set(dataForImage);
-
-  for (var y = dirtyY; y < limitBottom; y++) {
-    for (var x = dirtyX; x < limitRight; x++) {
-      var pos = y * width + x;
-      ctx.fillStyle = 'rgb(' + imageData[pos * 4 + 0]
-                        + ',' + imageData[pos * 4 + 1]
-                        + ',' + imageData[pos * 4 + 2] + ')';
-      ctx.fillRect(x + dx, y + dy, 1, 1);
-    }
-  }
-  return canvas.toDataURL();
-}
 
 // emulator -avd Nexus_5_API_23 -no-window -qemu -vnc :2
 // sudo lsof -i -n -P | grep TCP
@@ -102,3 +65,4 @@ const putImage = (dx, dy, width, height, data, dirtyX, dirtyY, dirtyWidth, dirty
 // clean all images: docker images -a | sed '1 d' | awk '{print $3}' | xargs -L1 docker rmi -f
 // run arbitrary commands inside an existing container: docker exec -it <mycontainer> bash
 // https://wiki.archlinux.org/index.php/QEMU#Mouse_integration
+// https://github.com/aikinci/droidbox/blob/master/install-fastdroid-vnc.sh

@@ -89,6 +89,10 @@ const putImageNew2 = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyH
       var pos = y * width + x;
       var pixel = data[pos];
 
+      // var r = (((pixel >> 11) & 31) / 31) * 100;
+      // var g = (((pixel >> 5) & 63) / 63) * 100;
+      // var b = (((pixel >> 0) & 31) / 31) * 100;
+
       var r = (((pixel >> 11) & 31) * 65535 + 31 / 2) / 31;
       var g = (((pixel >> 5) & 63) * 65535 + 63 / 2) / 63;
       var b = (((pixel >> 0) & 31) * 65535 + 31 / 2) / 31;
