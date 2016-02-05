@@ -1,21 +1,30 @@
+// Webpack imports
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config');
+// Emulator import
+const emulator = require('./emulator');
+// HTTP server + Express server imports
+const path = require('path');
+const mustache = require('mustache-express');
+const child = require('child_process').exec;
+const http = require('http');
 const express = require('express');
 const app = express();
-const path = require('path');
-const emulator = require('./emulator');
-const http = require('http');
 const server = http.createServer(app);
+// Socket.io imports
 const io = require('socket.io')(server);
 const redis = require('socket.io-redis');
 const port = process.env.PORT || 8000;
 const uri = require('./redis').uri;
 const compiler = webpack(config);
 const redisMobile = require('./redis').mobile();
-const mustache = require('mustache-express');
 
+const monkeyRunnerPath = path.join(__dirname, '../../Library/Android/sdk/tools/');
+
+// "Adapter" = Interface in charge of routing messages.
+// Here we use the one provided by socket.io on top of Redis
 io.adapter(redis(uri));
 
 server.listen(port, (error) => {
@@ -32,7 +41,6 @@ app.engine('mustache', mustache());
 app.set('views', __dirname + '/views');
 
 app.get('/dist', (req, res) => {
-  console.log('got here');
   res.sendFile(path.join(__dirname, 'dist/bundle.js'));
 });
 
@@ -48,17 +56,28 @@ app.get('/', (req, res, next) => {
   });
 });
 
-process.title = 'socket.io-android-emulator';
-
 // Load Android emulator
 setTimeout(function() {
   emulator();
-}, 10000);
+}, 8000);
 
 // Socket-io connection and event handlers
 io.on('connection', (socket) => {
-  console.log('socketio server connection');
-  socket.on('disconnect', () => {
-    console.log('socketio server disconnect');
+
+  console.log('socketio server connection successful!');
+
+  socket.on('script', () => {
+    var chunk = '';
+    child('cd ' + monkeyRunnerPath + 'monkeyrunner /Users/peekay/Desktop/tap-to-android/script.py', function(error, stdout, stderr) {
+      if (!error) {
+        console.log('ran command ' + name);
+      }
+      console.log(stdout);
+    });
   });
+
+  socket.on('disconnect', () => {
+    console.log('socketio server disconnected');
+  });
+
 });

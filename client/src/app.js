@@ -4,6 +4,11 @@
 const io = require('socket.io-client');
 const socket = io.connect('http://localhost:8000');
 
+let button = document.getElementById('script');
+button.addEventListener('click', function() {
+    socket.emit('script');
+});
+
 socket.on('connect', () => {
   console.log('connection on client');
 });
