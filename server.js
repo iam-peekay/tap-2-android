@@ -3,16 +3,18 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config');
+
 // Emulator import
 const emulator = require('./emulator');
+
 // HTTP server + Express server imports
 const path = require('path');
 const mustache = require('mustache-express');
-const child = require('child_process').exec;
 const http = require('http');
 const express = require('express');
 const app = express();
 const server = http.createServer(app);
+
 // Socket.io imports
 const io = require('socket.io')(server);
 const redis = require('socket.io-redis');
@@ -21,7 +23,12 @@ const uri = require('./redis').uri;
 const compiler = webpack(config);
 const redisMobile = require('./redis').mobile();
 
+// Monkeyrunner
+const child = require('child_process');
 const monkeyRunnerPath = path.join(__dirname, '../../Library/Android/sdk/tools/');
+const scriptPath = path.join(__dirname, 'monkeyRunnerModule.py');
+const monkeyRunnerChildProcess = child.spawn(monkeyRunnerPath + ' monkeyrunner ' + scriptPath);
+
 
 // "Adapter" = Interface in charge of routing messages.
 // Here we use the one provided by socket.io on top of Redis
@@ -66,18 +73,17 @@ io.on('connection', (socket) => {
 
   console.log('socketio server connection successful!');
 
-  socket.on('script', () => {
-    var chunk = '';
-    child('cd ' + monkeyRunnerPath + 'monkeyrunner /Users/peekay/Desktop/tap-to-android/script.py', function(error, stdout, stderr) {
-      if (!error) {
-        console.log('ran command ' + name);
-      }
-      console.log(stdout);
-    });
+  socket.on('userInput', () => {
+    monkeyRunnerChildProcess.stdin.write('hello');
   });
 
   socket.on('disconnect', () => {
     console.log('socketio server disconnected');
   });
 
+});
+
+// Checking for failed exec of monkeyrunner child process
+monkeyRunnerChildProcess.on('error', (err) => {
+  console.log('Failed to start monkeyrunner child process.');
 });

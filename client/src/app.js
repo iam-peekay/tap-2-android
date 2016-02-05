@@ -6,7 +6,7 @@ const socket = io.connect('http://localhost:8000');
 
 let button = document.getElementById('script');
 button.addEventListener('click', function() {
-    socket.emit('script');
+    socket.emit('userInput');
 });
 
 socket.on('connect', () => {
