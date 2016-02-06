@@ -3,6 +3,8 @@
 # Sys for handling process.stdin
 import sys
 
+data = sys.stdin.readline()
+
 # Imports the monkeyrunner modules used by this program
 from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice
 
@@ -21,9 +23,6 @@ device.drag((400, 1800), (400, 200), 1.0, 120)
 
 print 'Device is unlocked'
 
-# Wait for few seconds
-MonkeyRunner.sleep(5)
-
 
 def handle_user_input(input_type):
     "Handles user input to device using Monkeyrunner"
@@ -31,8 +30,11 @@ def handle_user_input(input_type):
         return
     elif input_type == 'hello':
         device.press('KEYCODE_MENU', MonkeyDevice.DOWN_AND_UP)
+        return
     else:
         print 'Oops, something went wrong. No hello'
+        return
 
-while True:
-    handle_user_input(sys.argv[1])
+if data == 'hello'
+    handle_user_input(data)
+    del data

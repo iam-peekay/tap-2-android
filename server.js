@@ -25,10 +25,45 @@ const redisMobile = require('./redis').mobile();
 
 // Monkeyrunner
 const child = require('child_process');
-const monkeyRunnerPath = path.join(__dirname, '../../Library/Android/sdk/tools/');
+const monkeyRunnerPath = path.join(__dirname, '../../Library/Android/sdk/tools');
 const scriptPath = path.join(__dirname, 'monkeyRunnerModule.py');
-const monkeyRunnerChildProcess = child.spawn(monkeyRunnerPath + ' monkeyrunner ' + scriptPath);
+const monkeyRunnerChildProcessOptions = {
+  cwd: monkeyRunnerPath,
+  stdio: 'pipe'
+}
+const monkeyRunnerChildProcess = child.spawn('monkeyrunner', ['monkeyRunnerModule.py'] ,monkeyRunnerChildProcessOptions);
 
+const newProcess = child.spawn('python', ['shell.py'], {cwd: '/Users/peekay/Desktop/tap-to-android/'});
+
+const newProcess2 = child.spawn('python', ['monkeyRunnerTwo.py'], {cwd: '/Users/peekay/Desktop/tap-to-android/'});
+
+newProcess.stdin.write('sdhfjshdf');
+newProcess.stdin.end();
+newProcess.stdout.on('data', function(data){
+    console.log('new process 1, data', data);
+});
+
+var chunk = '';
+
+newProcess2.stdout.on('data', function(data){
+    console.log('new process 2, data');
+    chunk += data;
+});
+newProcess2.stdout.on('close', function( ){
+    console.log(chunk);
+});
+
+// Checking for failed exec of monkeyrunner child process
+monkeyRunnerChildProcess.on('error', (err) => {
+  console.log('Failed to start monkeyrunner child process.');
+});
+
+monkeyRunnerChildProcess.stdout.on('data', (data) => {
+  console.log(data, 'data!');
+});
+monkeyRunnerChildProcess.stderr.on('data', (data) => {
+  console.log(data, 'error with child process :(');
+});
 
 // "Adapter" = Interface in charge of routing messages.
 // Here we use the one provided by socket.io on top of Redis
@@ -74,16 +109,17 @@ io.on('connection', (socket) => {
   console.log('socketio server connection successful!');
 
   socket.on('userInput', () => {
+    console.log('got here!')
+
     monkeyRunnerChildProcess.stdin.write('hello');
+    monkeyRunnerChildProcess.stdin.end();
+  });
+
+  socket.on('error', (error) => {
+    console.log("error with socketio", error.stack)
   });
 
   socket.on('disconnect', () => {
     console.log('socketio server disconnected');
   });
-
-});
-
-// Checking for failed exec of monkeyrunner child process
-monkeyRunnerChildProcess.on('error', (err) => {
-  console.log('Failed to start monkeyrunner child process.');
 });
