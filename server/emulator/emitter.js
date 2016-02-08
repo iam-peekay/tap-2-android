@@ -1,5 +1,5 @@
 const Android = require('./android');
-const redis = require('./redis').emulator();
+const redis = require('./../redis').emulator();
 const io = require('socket.io-emitter')(redis);
 
 process.title = 'socket.io-android-emulator';

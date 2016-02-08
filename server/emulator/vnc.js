@@ -57,6 +57,7 @@ VNC.prototype.drawRect = function(rect) {
 module.exports = VNC;
 
 // emulator -avd Nexus_5_API_23 -no-window -qemu -vnc :2
+// emulator -avd New_Device_API_23 -no-window -qemu -vnc :2
 // sudo lsof -i -n -P | grep TCP
 // adb kill-server
 // docker inspect --format '{{ .NetworkSettings.IPAddress }}'

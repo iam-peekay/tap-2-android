@@ -2,11 +2,11 @@
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
-const config = require('./webpack.config');
+const config = require('./../webpack.config');
 const compiler = webpack(config);
 
 // Emulator import
-const emulator = require('./emulator');
+const emulatorEmitter = require('./emulator/emitter');
 
 // HTTP server + Express server imports
 const path = require('path');
@@ -48,7 +48,7 @@ app.use(webpackHotMiddleware(compiler));
 
 // Views
 app.engine('mustache', mustache());
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/../client/views');
 
 // Routes
 app.get('/dist', (req, res) => {
@@ -68,7 +68,7 @@ app.get('/', (req, res, next) => {
 
 // Load Android emulator (TEMPORARY)
 setTimeout(function() {
-  emulator();
+  emulatorEmitter();
 }, 8000);
 
 // Socket-io connection and event handlers
