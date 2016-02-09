@@ -21,9 +21,21 @@ const io = require('socket.io')(server);
 const redis = require('socket.io-redis');
 const port = process.env.PORT || 8000;
 const uri = require('./redis').uri;
-const redisMobile = require('./redis').mobile();
 
-// Connection to Android View Client
+/*
+  Connection to Android View Client.
+  Create a ZeroRPC client object which connects to a
+  listening RPC Python server and can invoke any of
+  the functions in the class with which the server was
+  created.
+
+  NOTE: Python server was created on the same machine
+  as the node server, and we are connected to it at
+  localhost (127.0.0.1).
+
+  (See androidViewClient.py in the emulator directory)
+*/
+
 const zerorpc = require("zerorpc");
 const client = new zerorpc.Client();
 client.connect("tcp://127.0.0.1:4242");
@@ -54,28 +66,28 @@ app.set('views', __dirname + '/../client/views');
 app.get('/dist', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/bundle.js'));
 });
-
 app.get('/', (req, res) => {
     res.render('index.mustache');
 });
-// app.get('/', (req, res, next) => {
-//   redisMobile.get('Android:frame', (err, image) => {
-//     if (err) {
-//       return next(err);
-//     } else {
-//       res.render('index.mustache', {
-//         img: image ? image : ''
-//       });
-//     }
-//   });
-// });
 
 // Load Android emulator (TEMPORARY)
 setTimeout(function() {
   emulatorEmitter();
 }, 8000);
 
-// Socket-io connection and event handlers
+/*
+  Socket-io connection and event handlers. The main
+  event here is 'userInput' events being emitted from
+  socket.io client every time a user interacts with
+  the emulator. On each userInput event, we invoke an
+  RPC call to our python program (which is an RPC server).
+  The RPC server invokes any of the functions in the class
+  with which the server was created.
+  
+  (i.e. the first argument passed to "client.invoke" is
+  the name of the function, and remaining args are arguments
+  being passed to this function)
+*/
 io.on('connection', (socket) => {
   console.log('socketio server connection successful!');
 
