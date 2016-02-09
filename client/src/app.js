@@ -61,25 +61,34 @@ socket.on('copy', function(rect){
 
 
 const putImageNew = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
-  var data = imageData.data;
-  var height = imageData.height;
-  var width = imageData.width;
+  const data = imageData.data;
+  const height = imageData.height;
+  const width = imageData.width;
   dirtyX = dirtyX || 0;
   dirtyY = dirtyY || 0;
   dirtyWidth = dirtyWidth !== undefined ? dirtyWidth : width;
   dirtyHeight = dirtyHeight !== undefined ? dirtyHeight : height;
-  var limitBottom = dirtyY + dirtyHeight;
-  var limitRight = dirtyX + dirtyWidth;
-  for (var y = dirtyY; y < limitBottom; y++) {
-    for (var x = dirtyX; x < limitRight; x++) {
-      var pos = y * width + x;
-      var copy1 = data[pos * 2 + 0];
-      var copy2 = data[pos * 2 + 1];
+  const limitBottom = dirtyY + dirtyHeight;
+  const limitRight = dirtyX + dirtyWidth;
+  for (let y = dirtyY; y < limitBottom; y++) {
+    for (let x = dirtyX; x < limitRight; x++) {
+      let pos = y * width + x;
+      // Since we are now using UintClampedArray, we
+      // assume that each r, g, b, a sequence takes up
+      // 16 bits (i.e. 2 bytes), with R, G, B, A
+      // representing 4 bits each
+      let copy1 = data[pos * 2 + 0];
+      let copy2 = data[pos * 2 + 1];
 
-      var a = ((copy1 >>> 4) / 16) * 100;
-      var b = ((copy1 & 15) / 16) * 100;
-      var g = ((copy2 >>> 4) / 16) * 100;
-      var r = ((copy2 & 15) / 16) * 100;
+      // If I reverse the order a, b, g, r vs. r, g, b, a, it
+      // looks much closer to the real thing.
+      // I assume it must be because it is little endian
+      // hmmmm.......
+      // Still needs some work, but much closer than before.
+      let a = ((copy1 >>> 4) / 15);
+      let b = ((copy1 & 15) / 15) * 100;
+      let g = ((copy2 >>> 4) / 15) * 100;
+      let r = ((copy2 & 15) / 15) * 100;
       ctx.fillStyle = 'rgb(' + r + '%'
                         + ',' + g + '%'
                         + ',' + b + '%)';
@@ -89,6 +98,9 @@ const putImageNew = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHe
   }
 }
 
+
+// TEMPORARY - this is just an experimental function for me
+// to try out different formulas for putting image data
 
 const putImageNew2 = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
   var data = imageData.data;
