@@ -1,6 +1,5 @@
 const EventEmitter = require('events');
 const util = require('util');
-// const exec = require('child_process').exec;
 const VNC = require('./vnc');
 const net = require('net');
 
@@ -31,6 +30,7 @@ function Android() {
   this.running = false;
 }
 
+// Android emulator needs to be an event emitter
 util.inherits(Android, EventEmitter);
 
 Android.prototype.closed = () => {
@@ -39,12 +39,20 @@ Android.prototype.closed = () => {
   return;
 };
 
+/*
+  Define the "run" method which:
+  - Sets up VNC connection
+  - Listen to rect events coming from VNC and emit them to itself
+  - Then the emulator instance listens to its own events and emits
+  to socket.io (see emitter.js)
+*/
 Android.prototype.run = function() {
   const self = this;
+  this.firstFrameReceived = false;
   try {
     this.vnc = new VNC(hostName, port);
   } catch (e) {
-    console.log('connection error');
+    console.log('VNC connection error');
     return self.closed();
   }
 
@@ -55,28 +63,38 @@ Android.prototype.run = function() {
     this.tcp = net.connect({ host: tcpHost, port: tcpPort });
     this.tcp.on('end', () => self.closed());
   } catch (e) {
-    console.log('tcp connection error');
+    console.log('TCP connection error');
     return self.closed();
   }
-
-  this.vnc.on('connect', () => {
-    self.emit('connect');
-    console.log('successfully connected via vnc and authorized');
-  });
 
   this.vnc.on('copy', (rect) => {
     self.emit('copy', rect);
   });
 
-  this.vnc.on('raw', (frame) => {
-    self.emit('raw', frame);
-  });
-
-  this.vnc.on('frame', (frame) => {
-    self.emit('frame', frame);
+  this.vnc.on('raw', (imageData) => {
+    if (this.firstFrameReceived) {
+      self.emit('raw', imageData);
+    } else {
+      self.emit('firstFrame', imageData);
+      this.firstFrameReceived = true;
+    }
   });
 
   this.running = true;
+  this.destroyed = false;
+};
+
+/*
+  If there is an error event from the VNC,
+  we destroy the instance
+*/
+Android.prototype.destroy = () => {
+  if (this.destroyed) {
+    return this;
+  }
+  this.destroyed = true;
+  this.running = false;
+  return this;
 };
 
 module.exports = Android;

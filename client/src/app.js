@@ -13,40 +13,51 @@ socket.on('connect', () => {
   console.log('connection on client');
 });
 
-let image = document.getElementById('emulator-window').childNodes[0].nextSibling;
 let replaced = false;
-let canvas = document.createElement('canvas');
+let canvas = document.getElementById('canvas');
 let ctx;
 
-socket.on('raw', function (frameData) {
-  if (!frameData) {
+socket.on('firstFrame', function (imageData) {
+  if (!imageData) {
+    return;
+  }
+  // Set up canvas properties & context
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+  ctx = canvas.getContext('2d');
+
+  // Tranform canvas imageData
+  const canvasImageData = canvas.getContext('2d').createImageData(imageData.width, imageData.height);
+  const dataForImage = new Uint8ClampedArray(imageData.data);
+  // const dataForImage = new Uint16Array(frameData.data);
+  canvasImageData.data.set(dataForImage);
+
+  // Paint imageData to canvas
+  putImageNew(ctx, imageData.x, imageData.y, canvasImageData);
+});
+
+socket.on('raw', function (imageData) {
+  if (!imageData) {
     return;
   }
 
-  if (!replaced) {
-    let divImage = document.getElementById('emulator-window');
-    canvas.width = frameData.width;
-    canvas.height = frameData.height;
-    divImage.appendChild(canvas); // TODO: need to replace, not append
-    replaced = true;
-    console.log(canvas, 'canvas');
-  }
-
+  // Set up canvas context
   ctx = canvas.getContext('2d');
 
-  const imageData = canvas.getContext('2d').createImageData(frameData.width, frameData.height);
-  const dataForImage = new Uint8ClampedArray(frameData.data);
+  // Tranform canvas imageData
+  const canvasImageData = canvas.getContext('2d').createImageData(imageData.width, imageData.height);
+  const dataForImage = new Uint8ClampedArray(imageData.data);
   // const dataForImage = new Uint16Array(frameData.data);
-  imageData.data.set(dataForImage);
+  canvasImageData.data.set(dataForImage);
 
-  putImageNew(ctx, frameData.x, frameData.y, imageData);
-  // ctx.putImageData(imageData, frameData.x, frameData.y);
+  // Paint imageData to canvas
+  putImageNew(ctx, imageData.x, imageData.y, canvasImageData);
+  // ctx.putImageData(canvasImageData, imageData.x, imageData.y);
 });
 
 socket.on('copy', function(rect){
-  var imageData = ctx.getImageData(rect.src.x, rect.src.y, rect.width, rect.height);
-
-  ctx.putImageData(imageData, rect.x, rect.y);
+  const canvasImageData = ctx.getImageData(rect.src.x, rect.src.y, rect.width, rect.height);
+  ctx.putImageData(canvasImageData, rect.x, rect.y);
 });
 
 

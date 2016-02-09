@@ -15,6 +15,7 @@ EXPOSE 5037
 EXPOSE 5554
 EXPOSE 5555
 EXPOSE 5900
+EXPOSE 5902
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN echo "debconf shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
@@ -76,6 +77,7 @@ RUN echo "y" | android update sdk --filter build-tools-22.0.1 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-19 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-21 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-22 --no-ui -a
+RUN echo "y" | android update sdk --filter sys-img-x86_64-android-22 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-19 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-21 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-22 --no-ui -a

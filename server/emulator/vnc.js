@@ -19,7 +19,7 @@ function VNC(host, port) {
   });
 
   this.r.on('connect', () => {
-    console.log('successfully connected to VNC!');
+    console.log('successfully connected to VNC and authorized!');
     console.log(`Remote screen name: ${this.r.title}, Width:
     ${this.r.width}, Height: ${this.r.height}`);
   });
@@ -37,9 +37,7 @@ VNC.prototype.drawRect = function(rect) {
     this.emit('copy', rect);
     return;
   } else if (rect.encoding === rfb.encodings.raw) {
-    console.log('raw: ', rect.x, rect.y, rect.width, rect.height, rect.data);
-    console.log('rect', rect)
-
+    console.log('raw: ', rect);
 
     this.emit('raw', {
       x: rect.x,

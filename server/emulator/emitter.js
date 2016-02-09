@@ -4,9 +4,9 @@ const io = require('socket.io-emitter')(redis);
 
 process.title = 'socket.io-android-emulator';
 
-// load computer emulator
+// Load Android emulator instance and listen to events
+// being emitted from Android emulator
 function loadEmulator() {
-
   const emulator = new Android();
 
   emulator.on('error', () => {
@@ -19,22 +19,23 @@ function loadEmulator() {
     io.emit('success');
   })
 
-  emulator.on('raw', (frame) => {
-    io.emit('raw', frame);
+  emulator.on('raw', (imageData) => {
+    io.emit('raw', imageData);
   });
 
-  emulator.on('frame', (buf) => {
-    redis.set('Android:frame', buf);
+  emulator.on('firstFrame', (imageData) => {
+    io.emit('firstFrame', imageData);
   });
 
   emulator.on('copy', (rect) => {
     io.emit('copy', rect);
   });
 
+  // Run the emulator after a delay of 2 seconds
   setTimeout(() => {
-    console.log('running android emulator');
+    console.log('Booting up Android emulator');
     emulator.run();
-  }, 2000);
+  }, 1000);
 }
 
 module.exports = loadEmulator;

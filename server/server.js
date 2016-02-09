@@ -54,17 +54,21 @@ app.set('views', __dirname + '/../client/views');
 app.get('/dist', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/bundle.js'));
 });
-app.get('/', (req, res, next) => {
-  redisMobile.get('Android:frame', (err, image) => {
-    if (err) {
-      return next(err);
-    } else {
-      res.render('index.mustache', {
-        img: image ? image : ''
-      });
-    }
-  });
+
+app.get('/', (req, res) => {
+    res.render('index.mustache');
 });
+// app.get('/', (req, res, next) => {
+//   redisMobile.get('Android:frame', (err, image) => {
+//     if (err) {
+//       return next(err);
+//     } else {
+//       res.render('index.mustache', {
+//         img: image ? image : ''
+//       });
+//     }
+//   });
+// });
 
 // Load Android emulator (TEMPORARY)
 setTimeout(function() {
@@ -77,10 +81,12 @@ io.on('connection', (socket) => {
 
   socket.on('userInput', () => {
     console.log('got here!')
-    // monkeyRunnerChildProcess.stdin.write('hello');
-    // monkeyRunnerChildProcess.stdin.end();
-    client.invoke("handle_user_input", "hello", function(error, res, more) {
+    client.invoke('handle_user_input', 'menu', {'something': 1}, function(error, res, more) {
+      if (error) {
+        console.log(error.stack);
+      } else {
         console.log(res);
+      }
     });
   });
 
