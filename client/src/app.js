@@ -29,7 +29,7 @@ socket.on('firstFrame', function (imageData) {
   // Tranform canvas imageData
   const canvasImageData = canvas.getContext('2d').createImageData(imageData.width, imageData.height);
   const dataForImage = new Uint8ClampedArray(imageData.data);
-  // const dataForImage = new Uint16Array(frameData.data);
+  // const dataForImage = new Uint16Array(imageData.data);
   canvasImageData.data.set(dataForImage);
 
   // Paint imageData to canvas
@@ -47,12 +47,11 @@ socket.on('raw', function (imageData) {
   // Tranform canvas imageData
   const canvasImageData = canvas.getContext('2d').createImageData(imageData.width, imageData.height);
   const dataForImage = new Uint8ClampedArray(imageData.data);
-  // const dataForImage = new Uint16Array(frameData.data);
+  // const dataForImage = new Uint16Array(imageData.data);
   canvasImageData.data.set(dataForImage);
 
   // Paint imageData to canvas
   putImageNew(ctx, imageData.x, imageData.y, canvasImageData);
-  // ctx.putImageData(canvasImageData, imageData.x, imageData.y);
 });
 
 socket.on('copy', function(rect){
@@ -77,10 +76,10 @@ const putImageNew = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHe
       var copy1 = data[pos * 2 + 0];
       var copy2 = data[pos * 2 + 1];
 
-      var r = ((copy1 >>> 4) / 15) * 100;
-      var g = ((copy1 & 15) / 15) * 100;
-      var b = ((copy2 >>> 4) / 15) * 100;
-      var a = (copy2 & 15) / 15;
+      var a = ((copy1 >>> 4) / 16) * 100;
+      var b = ((copy1 & 15) / 16) * 100;
+      var g = ((copy2 >>> 4) / 16) * 100;
+      var r = ((copy2 & 15) / 16) * 100;
       ctx.fillStyle = 'rgb(' + r + '%'
                         + ',' + g + '%'
                         + ',' + b + '%)';
@@ -89,6 +88,7 @@ const putImageNew = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHe
     }
   }
 }
+
 
 const putImageNew2 = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
   var data = imageData.data;
@@ -105,13 +105,13 @@ const putImageNew2 = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyH
       var pos = y * width + x;
       var pixel = data[pos];
 
-      // var r = (((pixel >> 11) & 31) / 31) * 100;
-      // var g = (((pixel >> 5) & 63) / 63) * 100;
-      // var b = (((pixel >> 0) & 31) / 31) * 100;
+      var r = (((pixel >> 11) & 31) / 31) * 100;
+      var g = (((pixel >> 5) & 63) / 63) * 100;
+      var b = (((pixel >> 0) & 31) / 31) * 100;
 
-      var r = (((pixel >> 11) & 31) * 65535 + 31 / 2) / 31;
-      var g = (((pixel >> 5) & 63) * 65535 + 63 / 2) / 63;
-      var b = (((pixel >> 0) & 31) * 65535 + 31 / 2) / 31;
+      // var r = ((((pixel >> 11) & 31) * 65535 + 31 / 2) / 31) * 100;
+      // var g = ((((pixel >> 5) & 63) * 65535 + 63 / 2) / 63) * 100;
+      // var b = ((((pixel >> 0) & 31) * 65535 + 31 / 2) / 31) * 100;
 
       ctx.fillStyle = 'rgb(' + r + '%'
                         + ',' + g + '%'
