@@ -22,6 +22,7 @@ function VNC(host, port) {
     console.log('successfully connected to VNC and authorized!');
     console.log(`Remote screen name: ${this.r.title}, Width:
     ${this.r.width}, Height: ${this.r.height}`);
+    console.log(this.r);
   });
 
   this.r.on('rect', this.drawRect.bind(this));

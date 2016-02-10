@@ -25,7 +25,6 @@ socket.on('firstFrame', function (imageData) {
   canvas.width = imageData.width;
   canvas.height = imageData.height;
   ctx = canvas.getContext('2d');
-
   // Tranform canvas imageData
   const canvasImageData = canvas.getContext('2d').createImageData(imageData.width, imageData.height);
   const dataForImage = new Uint8ClampedArray(imageData.data);
@@ -43,7 +42,6 @@ socket.on('raw', function (imageData) {
 
   // Set up canvas context
   ctx = canvas.getContext('2d');
-
   // Tranform canvas imageData
   const canvasImageData = canvas.getContext('2d').createImageData(imageData.width, imageData.height);
   const dataForImage = new Uint8ClampedArray(imageData.data);
