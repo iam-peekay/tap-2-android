@@ -4,10 +4,56 @@
 const io = require('socket.io-client');
 const socket = io.connect('http://localhost:8000');
 
-let button = document.getElementById('script');
-button.addEventListener('click', function() {
-    socket.emit('userInput');
+// Below event handlers are just for testing purposes.
+// Will be replaced
+let menu = document.getElementById('menu');
+menu.addEventListener('click', function() {
+    socket.emit('userInput', 'menu');
 });
+
+let camera = document.getElementById('camera');
+camera.addEventListener('click', function() {
+    socket.emit('userInput', 'camera');
+});
+
+let messages = document.getElementById('messages');
+messages.addEventListener('click', function() {
+    socket.emit('userInput', 'messages');
+});
+
+let home = document.getElementById('home');
+home.addEventListener('click', function() {
+    socket.emit('userInput', 'home');
+});
+
+let web = document.getElementById('web');
+web.addEventListener('click', function() {
+    socket.emit('userInput', 'web');
+});
+
+let volumeUp = document.getElementById('volumeUp');
+volumeUp.addEventListener('click', function() {
+    socket.emit('userInput', 'volumeUp');
+});
+
+let ok = document.getElementById('ok');
+ok.addEventListener('click', function(ev) {
+  console.log(ev);
+    socket.emit('userInput', 'ok');
+});
+
+document.body.addEventListener('click', function(ev) {
+  console.log(ev);
+});
+
+
+/*
+  Socket.io client connection.
+
+  We listen to rect events coming from our emulator's
+  VNC server, then convert the raw buffer data for each
+  rect to RGB format, and then paint each rect to canvas.
+*/
 
 socket.on('connect', () => {
   console.log('connection on client');
@@ -58,6 +104,8 @@ socket.on('copy', function(rect){
 });
 
 
+// Formula for converting our imageData buffer to RGB,
+// and then painting to canvas.
 const putImageNew = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
   const data = imageData.data;
   const height = imageData.height;
@@ -92,6 +140,11 @@ const putImageNew = (ctx, dx, dy, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHe
                         + ',' + b + '%)';
 
       ctx.fillRect(x + dx, y + dy, 1, 1);
+
+      // Alternate: assumes 5 for R, 6 for G, 5 for B
+      // let b = ((copy1 >> 3) / 31) * 100;
+      // let g = (( ((copy1 & 7) << 5) + ((copy2 & 63) >> 5) ) / 63) * 100;
+      // let r = ((copy2 & 31) / 31) * 100;
     }
   }
 }

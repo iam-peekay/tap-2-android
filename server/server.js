@@ -83,7 +83,7 @@ setTimeout(function() {
   RPC call to our python program (which is an RPC server).
   The RPC server invokes any of the functions in the class
   with which the server was created.
-  
+
   (i.e. the first argument passed to "client.invoke" is
   the name of the function, and remaining args are arguments
   being passed to this function)
@@ -91,9 +91,9 @@ setTimeout(function() {
 io.on('connection', (socket) => {
   console.log('socketio server connection successful!');
 
-  socket.on('userInput', () => {
+  socket.on('userInput', (type) => {
     console.log('got here!')
-    client.invoke('handle_user_input', 'menu', {'something': 1}, function(error, res, more) {
+    client.invoke('handle_user_input', type, {'something': 1}, function(error, res, more) {
       if (error) {
         console.log(error.stack);
       } else {
