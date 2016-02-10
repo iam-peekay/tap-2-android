@@ -59,7 +59,6 @@ socket.on('connect', () => {
   console.log('connection on client');
 });
 
-let replaced = false;
 let canvas = document.getElementById('canvas');
 let ctx;
 
@@ -67,7 +66,7 @@ socket.on('firstFrame', function (imageData) {
   if (!imageData) {
     return;
   }
-  
+
   const imageDataAsArray = [];
   for (let key in imageData.clamped8) {
     imageDataAsArray.push(imageData.clamped8[key]);
