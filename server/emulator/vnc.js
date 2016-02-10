@@ -39,7 +39,7 @@ VNC.prototype.drawRect = function(rect) {
     return;
   } else if (rect.encoding === rfb.encodings.raw) {
     console.log('raw: ', rect);
-
+    const dataForImage = new Uint8ClampedArray(rect.data);
     this.emit('raw', {
       x: rect.x,
       y: rect.y,
@@ -48,7 +48,8 @@ VNC.prototype.drawRect = function(rect) {
       data: rect.data,
       redShift: this.r.redShift,
       blueShift: this.r.blueShift,
-      greenShift: this.r.greenShift
+      greenShift: this.r.greenShift,
+      clamped8: dataForImage
     });
   }
 };

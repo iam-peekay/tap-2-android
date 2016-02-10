@@ -67,32 +67,44 @@ socket.on('firstFrame', function (imageData) {
   if (!imageData) {
     return;
   }
+  
+  const imageDataAsArray = [];
+  for (let key in imageData.clamped8) {
+    imageDataAsArray.push(imageData.clamped8[key]);
+  }
+
   // Set up canvas properties & context
   canvas.width = imageData.width;
   canvas.height = imageData.height;
   ctx = canvas.getContext('2d');
   // Tranform canvas imageData
   const canvasImageData = canvas.getContext('2d').createImageData(imageData.width, imageData.height);
-  const dataForImage = new Uint8ClampedArray(imageData.data);
+  // const dataForImage = new Uint8ClampedArray(imageData.data);
   // const dataForImage = new Uint16Array(imageData.data);
-  canvasImageData.data.set(dataForImage);
+  canvasImageData.data.set(imageDataAsArray);
 
   // Paint imageData to canvas
   putImageNew(ctx, imageData.x, imageData.y, canvasImageData);
 });
 
 socket.on('raw', function (imageData) {
+
   if (!imageData) {
     return;
+  }
+
+  const imageDataAsArray = [];
+  for (key in imageData.clamped8) {
+    imageDataAsArray.push(imageData.clamped8[key]);
   }
 
   // Set up canvas context
   ctx = canvas.getContext('2d');
   // Tranform canvas imageData
   const canvasImageData = canvas.getContext('2d').createImageData(imageData.width, imageData.height);
-  const dataForImage = new Uint8ClampedArray(imageData.data);
+  // const dataForImage = new Uint8ClampedArray(imageData.data);
   // const dataForImage = new Uint16Array(imageData.data);
-  canvasImageData.data.set(dataForImage);
+  canvasImageData.data.set(imageDataAsArray);
 
   // Paint imageData to canvas
   putImageNew(ctx, imageData.x, imageData.y, canvasImageData);
