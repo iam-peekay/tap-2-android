@@ -39,25 +39,23 @@ VNC.prototype.drawRect = function(rect) {
     return;
   } else if (rect.encoding === rfb.encodings.raw) {
     console.log('raw: ', rect);
-    const dataForImage = new Uint8ClampedArray(rect.data);
+
     this.emit('raw', {
       x: rect.x,
       y: rect.y,
       width: rect.width,
       height: rect.height,
-      data: rect.data,
       redShift: this.r.redShift,
       blueShift: this.r.blueShift,
       greenShift: this.r.greenShift,
-      clamped8: dataForImage
+      data: rect.data
     });
   }
 };
 
 module.exports = VNC;
 
-// emulator -avd Nexus_5_API_23 -no-window -qemu -vnc :2
-// emulator -avd New_Device_API_23 -no-window -qemu -vnc :2
+// emulator -avd Nexus_5_API_23 -no-window -gpu off -cpu-delay 0 -no-boot-anim -qemu -vnc :2
 // sudo lsof -i -n -P | grep TCP
 // adb kill-server
 // docker inspect --format '{{ .NetworkSettings.IPAddress }}'

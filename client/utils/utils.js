@@ -71,35 +71,6 @@ export const putImage = (ctx, dx, dy, width, height, imageData, dirtyX, dirtyY, 
   }
 }
 
-export const putImageNew = (ctx, dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
-  var data = imageData.data;
-  var height = imageData.height;
-  var width = imageData.width;
-  dirtyX = dirtyX || 0;
-  dirtyY = dirtyY || 0;
-  dirtyWidth = dirtyWidth !== undefined ? dirtyWidth : width;
-  dirtyHeight = dirtyHeight !== undefined ? dirtyHeight : height;
-  var limitBottom = dirtyY + dirtyHeight;
-  var limitRight = dirtyX + dirtyWidth;
-  for (var y = dirtyY; y < limitBottom; y++) {
-    for (var x = dirtyX; x < limitRight; x++) {
-      var pos = y * width + x;
-      var copy1 = data[pos * 2 + 0];
-      var copy2 = data[pos * 2 + 1];
-      var r = ((copy1 >>> 4) / 15) * 100;
-      var g = ((copy1 & 15) / 15) * 100;
-      var b = ((copy2 >>> 4) / 15) * 100;
-      var a = (copy2 & 15) / 15;
-      ctx.fillStyle = 'rgba(' + r + '%'
-                        + ',' + g + '%'
-                        + ',' + b + '%'
-                        + ',' + a/255 + ')';
-      ctx.fillRect(x + dx, y + dy, 1, 1);
-    }
-  }
-}
-
-
 export const encodeFrame = (rect) => {
   var rgb = new Buffer(rect.width * rect.height * 3, 'binary');
   var offset = 0;
@@ -114,4 +85,27 @@ export const encodeFrame = (rect) => {
   }
   var image = new PNG(rgb, rect.width, rect.height, 'rgb');
   return image;
+}
+
+export const convertBase = (num) => {
+    return {
+        from : function (baseFrom) {
+            return {
+                to : function (baseTo) {
+                    return parseInt(num, baseFrom).toString(baseTo);
+                }
+            }
+        }
+    }
+}
+
+// binary to hexadecimal
+export const bin2hex (num) => {
+    return convertBase(num).from(2).to(16);
+};
+
+// swap 16bit
+export const swap16 (val) => {
+    return ((val & 0xFF) << 8)
+           | ((val >> 8) & 0xFF);
 }
