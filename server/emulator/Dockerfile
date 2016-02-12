@@ -24,14 +24,26 @@ RUN echo "debconf shared/accepted-oracle-license-v1-1 seen true" | debconf-set-s
 RUN apt-get -y update
 
 # Install add-apt-repository, sshd, bzip2, net tools and make
-RUN apt-get -y install \
-    python-software-properties \
+RUN apt-get -y install python-software-properties \
+    python3-software-properties \
+    software-properties-common \
     bzip2 \
     ssh \
     net-tools \
+    curl \
+    nano \
+    wget \
+    dialog \
     make \
     build-essential \
     checkinstall \
+    qemu-kvm \
+    kvm \
+    qemu \
+    libvirt-bin \
+    ubuntu-vm-builder \
+    bridge-utils \
+    virt-viewer
 
 # Add oracle-jdk7 to repositories
 RUN add-apt-repository ppa:webupd8team/java
@@ -68,7 +80,7 @@ ENV PATH $PATH:$ANT_HOME/bin
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
 
 # Remove compressed files.
-RUN cd /; rm android-sdk_24.4.1-linux.tgz && rm apache-ant-1.8.4-bin.tar.gz && rm fastdroid-vnc
+RUN cd /; rm android-sdk_r24.4.1-linux.tgz && rm apache-ant-1.8.4-bin.tar.gz
 
 # Some preparation before update
 RUN chown -R root:root /usr/local/android-sdk/
@@ -84,6 +96,14 @@ RUN echo "y" | android update sdk --filter sys-img-x86-android-23 --no-ui -a
 
 # Update ADB
 RUN echo "y" | android update adb
+
+
+# Add intel_kvm module for KVM acceleration
+# RUN apt-get update
+# RUN apt-get install -y linux-headers-$(uname -r)
+# RUN ln -s /usr/src/linux-headers-$(uname -r)/ /lib/modules/$(uname -r)/build
+# RUN depmod
+# RUN modprobe kvm_intel
 
 # Create fake keymap file for adb
 RUN mkdir /usr/local/android-sdk/tools/keymaps

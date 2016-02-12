@@ -10,12 +10,37 @@ ENV ROOTPASSWORD android
 EXPOSE 8000
 EXPOSE 4242
 
+# Update packages
+RUN apt-get -y update
+
 # Install ZeroRPC dependencies
-RUN apt-get install -y \
+RUN apt-get install -y python3-software-properties \
+    software-properties-common \
     build-essential \
+    wget \
     checkinstall \
     libzmq-dev \
-    libevent \
+    libevent-dev \
+    libffi-dev \
+    libncurses-dev \
+    libyaml-dev \
+    libpq-dev \
+    pkg-config \
+    libtool \
+    automake \
+    uuid-dev \
+    autoconf
+
+# RUN autoreconf -fis
+
+# RUN wget https://github.com/downloads/libevent/libevent/libevent-2.0.21-stable.tar.gz
+# RUN tar -xvzf libevent-2.0.21-stable.tar.gz
+# RUN cd libevent-2.0.21-stable
+# RUN ./configure --PREFIX=/opt/libevent
+# RUN make
+# RUN make install
+
+RUN apt-get install -y libevent
     python-pip \
     python-setuptools
 
@@ -40,4 +65,4 @@ RUN npm install
 # Bundle app source
 COPY . /usr/src/tap-to-android
 
-CMD [ "npm", "start" ]
+CMD ["npm", "start"]

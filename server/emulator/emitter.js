@@ -31,7 +31,7 @@ function loadEmulator() {
     io.emit('copy', rect);
   });
 
-  // Run the emulator after a delay of 2 seconds
+  // Run the emulator after a delay of 1 second
   setTimeout(() => {
     console.log('Booting up Android emulator');
     emulator.run();

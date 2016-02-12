@@ -29,7 +29,7 @@ const uri = require('./redis').uri;
   the functions in the class with which the server was
   created.
 
-  NOTE: Python server was created on the same machine
+  NOTE: Python RPC server was created on the same machine
   as the node server, and we are connected to it at
   localhost (127.0.0.1).
 
@@ -70,7 +70,7 @@ app.get('/', (req, res) => {
     res.render('index.mustache');
 });
 
-// Load Android emulator (TEMPORARY)
+// Connect to Android emulator after a delay of 8 seconds
 setTimeout(function() {
   emulatorEmitter();
 }, 8000);

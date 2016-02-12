@@ -14,7 +14,7 @@ COLON := :
 .PHONY = run ports kill ps
 
 all:
-	@docker build -q -t android_emulator .
+	@docker build -t android_emulator .
 	@docker images
 
 run: clean

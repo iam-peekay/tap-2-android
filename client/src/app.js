@@ -96,14 +96,29 @@ socket.on('copy', function(rect){
 });
 
 const putImageOnCanvas = (ctx, imageData) => {
-  var test = new DataView(imageData.data, 0);
+  // Convert raw Array buffer to a data view, 0 byte offset
+  var dataView = new DataView(imageData.data, 0);
+  // Generate image data for canvas using width and height
   const canvasImageData = ctx.createImageData(imageData.width, imageData.height);
   let red, green, blue;
-  for (var i = 0; i < test.byteLength; i += 2) {
-    let current = test.getInt16(i, true)
-    red = (((current >> 11) & 31) / 31) * 255;
-    green = (((current >> 5) & 63) / 63) * 255;
-    blue = ((current & 31) / 31) * 255;
+  /*
+    We need to overwrite the canvasImageData.data value
+    because it is expecting it to be 32bpp, but our
+    data is 16bpp.
+
+    For every 2 bytes (16 bits), we generate the current
+    pixel containing 16 bits, little endian true.
+    Then we apply the red/blue/green shift, then
+    & the result by the red/green/blue max.
+    Then divide this result (which is out of the max values)
+    by the max value and multiply by 255 because putImageData
+    is expecting canvasImageData.data values to be out of 255 :)
+  */
+  for (var i = 0; i < dataView.byteLength; i += 2) {
+    let currentPixel = dataView.getInt16(i, true)
+    red = (((currentPixel >> 11) & 31) / 31) * 255;
+    green = (((currentPixel >> 5) & 63) / 63) * 255;
+    blue = ((currentPixel & 31) / 31) * 255;
 
     canvasImageData.data[i*2 + 0] = red // R
     canvasImageData.data[i*2 + 1 ] = green // G
