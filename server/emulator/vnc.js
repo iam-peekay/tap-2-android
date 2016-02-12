@@ -38,7 +38,7 @@ VNC.prototype.drawRect = function(rect) {
     this.emit('copy', rect);
     return;
   } else if (rect.encoding === rfb.encodings.raw) {
-    console.log('raw: ', rect);
+    // console.log('raw: ', rect);
 
     this.emit('raw', {
       x: rect.x,
@@ -64,3 +64,25 @@ module.exports = VNC;
 // run arbitrary commands inside an existing container: docker exec -it <mycontainer> bash
 // https://wiki.archlinux.org/index.php/QEMU#Mouse_integration
 // https://github.com/aikinci/droidbox/blob/master/install-fastdroid-vnc.sh
+/*
+ca-certificates
+libreadline-gplv2-dev \
+libncursesw5-dev \
+libssl-dev \
+libsqlite3-dev \
+tk-dev \
+libgdbm-dev \
+libc6-dev \
+libbz2-dev \
+
+# Install Python
+# RUN wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
+# RUN tar xzf Python-3.4.3.tgz
+# RUN cd Python-3.4.3
+# RUN ./configure
+# RUN make altinstall
+
+# Install fastdroid VNC server
+RUN wget ‐‐directory-prefix=/usr/local/ https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/fastdroid-vnc/fastdroid-vnc
+
+*/
