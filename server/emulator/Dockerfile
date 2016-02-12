@@ -76,8 +76,8 @@ RUN chown -R root:root /usr/local/android-sdk/
 # Install latest android tools and system images
 RUN echo "y" | android update sdk --filter platform-tool --no-ui --force
 RUN echo "y" | android update sdk --filter platform --no-ui --force
-RUN echo "y" | android update sdk --filter build-tools-22.0.1 --no-ui -a
-RUN echo "y" | android update sdk --filter sys-img-x86-android-19 --no-ui -a
+RUN echo "y" | android update sdk --filter build-tools-23.0.2 --no-ui -a
+# RUN echo "y" | android update sdk --filter sys-img-x86-android-19 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-21 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-22 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-23 --no-ui -a
