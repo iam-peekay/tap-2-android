@@ -24,6 +24,12 @@ class HelloRPC(object):
     def handle_user_input(self, input_type, data):
         if input_type is None:
             return 'Oops, you forgot to provide a correct input type'
+        elif input_type == 'touch':
+            device.touch(data['x'], data['y'], adbclient.DOWN_AND_UP)
+            return 'Touched!'
+        elif input_type == 'drag':
+            device.drag((data['startX'], data['startY']), (data['endX'], data['endY']), 1.0, 120)
+            return 'Drag!'
         elif input_type == 'menu':
             device.press('KEYCODE_MENU', adbclient.DOWN_AND_UP)
             return 'Menu!'
@@ -42,9 +48,6 @@ class HelloRPC(object):
         elif input_type == 'home':
             device.press('KEYCODE_HOME', adbclient.DOWN_AND_UP)
             return 'Home!'
-        elif input_type == 'ok':
-            device.touch(390, 510, adbclient.DOWN_AND_UP)
-            return 'OK!'
         else:
             return 'Oops, something went wrong. Please provide the correct input type'
     def unlock_phone(self):
