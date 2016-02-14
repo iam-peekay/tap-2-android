@@ -91,9 +91,31 @@ setTimeout(function() {
 io.on('connection', (socket) => {
   console.log('socketio server connection successful!');
 
-  socket.on('userInput', (type) => {
+  socket.on('userInput', (type, data) => {
     console.log('got here!')
-    client.invoke('handle_user_input', type, {'something': 1}, function(error, res, more) {
+    client.invoke('handle_user_input', type, {'testing': 123}, function(error, res, more) {
+      if (error) {
+        console.log(error.stack);
+      } else {
+        console.log(res);
+      }
+    });
+  });
+
+  socket.on('touch', (data) => {
+    console.log('got here!', data)
+    client.invoke('handle_user_input', 'touch', data, function(error, res, more) {
+      if (error) {
+        console.log(error.stack);
+      } else {
+        console.log(res);
+      }
+    });
+  });
+
+  socket.on('drag', (data) => {
+    console.log('got here!', data)
+    client.invoke('handle_user_input', 'drag', data, function(error, res, more) {
       if (error) {
         console.log(error.stack);
       } else {

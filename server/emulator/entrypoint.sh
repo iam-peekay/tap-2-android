@@ -48,4 +48,4 @@ else
 fi
 
 echo "no" | /usr/local/android-sdk/tools/android create avd -f -n test -t ${EMULATOR} --abi default/${ARCH}
-echo "no" | /usr/local/android-sdk/tools/emulator64-${EMU} -avd test -noaudio -no-window -gpu off -no-boot-anim -verbose -qemu -vnc :2
+echo "no" | nohup /usr/local/android-sdk/tools/emulator64-${EMU} -avd test -noaudio -no-window -gpu off -no-boot-anim -verbose -qemu -vnc :2 &

@@ -9,6 +9,7 @@ ENV ROOTPASSWORD android
 # Expose Node and ZeroRPC server ports
 EXPOSE 8000
 EXPOSE 4242
+EXPOSE 6379
 
 # Update packages
 RUN apt-get -y update
@@ -17,14 +18,15 @@ RUN apt-get -y update
 RUN apt-get install -y python3-software-properties \
     software-properties-common \
     build-essential \
+    make \
     wget \
     checkinstall \
-    libzmq-dev \
     libevent-dev \
     libffi-dev \
     libncurses-dev \
     libyaml-dev \
     libpq-dev \
+    libzmq3-dev \
     pkg-config \
     libtool \
     automake \
@@ -40,14 +42,18 @@ RUN apt-get install -y python3-software-properties \
 # RUN make
 # RUN make install
 
-RUN apt-get install -y libevent
-    python-pip \
-    python-setuptools
+# Install python tools
+RUN apt-get install -y python-pip \
+    python-setuptools \
+    python-dev
 
 # Install Node, npm
-RUN apt-get install -y \
-    nodejs \
+RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo -E bash -
+RUN apt-get install -y nodejs \
     npm
+
+RUN ln -s `which nodejs` /usr/bin/node
+
 
 # Install ZeroRPC
 RUN pip install pyzmq

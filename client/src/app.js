@@ -2,8 +2,58 @@
 /* global URL */
 
 const io = require('socket.io-client');
-const socket = io.connect('http://localhost:8000');
+const socket = io.connect('http://192.168.1.105:8000');
+let canvas = document.getElementById('canvas');
+let ctx;
+var touchStart = [];
+var touchEnd = [];
+var touchMove = [];
 
+canvas.addEventListener("touchstart", handleTouchStart, false);
+canvas.addEventListener("touchend", handleTouchEnd, false);
+canvas.addEventListener("touchcancel", handleTouchCancel, false);
+canvas.addEventListener("touchmove", handleTouchMove, false);
+
+function handleTouchStart(ev) {
+  ev.preventDefault();
+  let touches = ev.changedTouches;
+  console.log('touch start', touches);
+
+  touchStart.push(touches);
+}
+
+function handleTouchEnd(ev) {
+  ev.preventDefault();
+  let touches = ev.changedTouches;
+  console.log('touch end', touches);
+
+  touchEnd.push(touches);
+  if (touchStart.length === 0) {
+    return;
+  }
+
+  if (touchMove.length === 0) {
+    socket.emit('touch', {'x': touches[0].clientX, 'y': touches[0].clientY});
+    touchMove = [];
+  } else {
+    socket.emit('drag', {'startX': touchStart[0][0].clientX, 'startY': touchStart[0][0].clientY, 'endX': touches[0].clientX, 'endY': touches[0].clientY});
+    touchMove = [];
+  }
+}
+
+function handleTouchCancel(ev) {
+  ev.preventDefault();
+  let touches = ev.changedTouches;
+  console.log('touch cancel', touches);
+}
+
+function handleTouchMove(ev) {
+  ev.preventDefault();
+  let touches = ev.changedTouches;
+  console.log('touch move', touches);
+
+  touchMove.push(touches);
+}
 // Below event handlers are just for testing purposes.
 // Will be replaced
 let menu = document.getElementById('menu');
@@ -36,12 +86,6 @@ volumeUp.addEventListener('click', function() {
     socket.emit('userInput', 'volumeUp');
 });
 
-let ok = document.getElementById('ok');
-ok.addEventListener('click', function(ev) {
-  console.log(ev);
-    socket.emit('userInput', 'ok');
-});
-
 document.body.addEventListener('click', function(ev) {
   console.log(ev);
 });
@@ -59,8 +103,6 @@ socket.on('connect', () => {
   console.log('connection on client');
 });
 
-let canvas = document.getElementById('canvas');
-let ctx;
 
 socket.on('firstFrame', function (imageData) {
   console.log('first frame');
