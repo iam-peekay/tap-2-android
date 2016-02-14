@@ -19,6 +19,7 @@ RUN apt-get install -y python3-software-properties \
     software-properties-common \
     build-essential \
     make \
+    curl \
     wget \
     checkinstall \
     libevent-dev \
@@ -27,20 +28,14 @@ RUN apt-get install -y python3-software-properties \
     libyaml-dev \
     libpq-dev \
     libzmq3-dev \
+    libcairo2-dev \
+    libjpeg-dev \
+    libgif-dev \
     pkg-config \
     libtool \
     automake \
     uuid-dev \
     autoconf
-
-# RUN autoreconf -fis
-
-# RUN wget https://github.com/downloads/libevent/libevent/libevent-2.0.21-stable.tar.gz
-# RUN tar -xvzf libevent-2.0.21-stable.tar.gz
-# RUN cd libevent-2.0.21-stable
-# RUN ./configure --PREFIX=/opt/libevent
-# RUN make
-# RUN make install
 
 # Install python tools
 RUN apt-get install -y python-pip \
@@ -48,11 +43,11 @@ RUN apt-get install -y python-pip \
     python-dev
 
 # Install Node, npm
-RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo -E bash -
-RUN apt-get install -y nodejs \
-    npm
+RUN curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+RUN apt-get install -y nodejs
 
-RUN ln -s `which nodejs` /usr/bin/node
+#RUN rm /usr/bin/node
+#RUN ln -s `which nodejs` /usr/bin/node
 
 
 # Install ZeroRPC

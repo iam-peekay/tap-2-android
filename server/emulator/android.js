@@ -14,7 +14,7 @@ const net = require('net');
 */
 
 // Built-in android emulator VNC port.
-const hostName = process.env.ANDROID_VNC_HOST || '127.0.0.1';
+const hostName = process.env.HOST || '127.0.0.1';
 const port = process.env.ANDROID_VNC_PORT || 5902;
 const tcp = process.env.ANDROID_TCP || '127.0.0.1:5555';
 // const hostName = process.env.ANDROID_VNC_HOST || '192.168.99.100';

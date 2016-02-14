@@ -2,7 +2,7 @@
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
-const config = require('./../webpack.config');
+const config = require('./../webpack-dev.config');
 const compiler = webpack(config);
 
 // Emulator import
@@ -21,6 +21,15 @@ const io = require('socket.io')(server);
 const redis = require('socket.io-redis');
 const port = process.env.PORT || 8000;
 const uri = require('./redis').uri;
+const exec = require('child_process').exec;
+const child = exec('redis-server',
+  (error, stdout, stderr) => {
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+    if (error !== null) {
+      console.log(`exec error: ${error}`);
+    }
+});
 
 /*
   Connection to Android View Client.
@@ -38,8 +47,9 @@ const uri = require('./redis').uri;
 
 const zerorpc = require("zerorpc");
 const client = new zerorpc.Client();
-client.connect("tcp://127.0.0.1:4242");
-const child = require('child_process');
+const RPC_HOST = process.env.HOST || '127.0.0.1';
+const RPC_PORT = process.env.RPC_PORT || '4242';
+client.connect('tcp://' + RPC_HOST + ':' + RPC_PORT);
 
 // "Adapter" = Interface in charge of routing messages.
 // Here we use the one provided by socket.io on top of Redis
@@ -55,17 +65,15 @@ server.listen(port, (error) => {
 });
 
 // Middleware
-app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
-app.use(webpackHotMiddleware(compiler));
+// app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
+// app.use(webpackHotMiddleware(compiler));
 
 // Views
 app.engine('mustache', mustache());
 app.set('views', __dirname + '/../client/views');
+app.use(express.static(__dirname + '/../build'));
 
 // Routes
-app.get('/dist', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/bundle.js'));
-});
 app.get('/', (req, res) => {
     res.render('index.mustache');
 });
@@ -132,3 +140,15 @@ io.on('connection', (socket) => {
     console.log('socketio server disconnected');
   });
 });
+
+
+/*
+Environment variables to set:
+- HOST
+- PORT
+- RPC_PORT
+- REDIS_URI
+- ANDROID_VNC_HOST
+- ANDROID_VNC_PORT
+- ANDROID_TCP
+*/

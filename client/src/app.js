@@ -2,7 +2,11 @@
 /* global URL */
 
 const io = require('socket.io-client');
-const socket = io.connect('http://192.168.1.105:8000');
+// NOTE: Needs to be updated to the external IP address of the machine the server runs on
+const host = process.env.HOST || "localhost"
+const port = process.env.PORT || "8000"
+const socket = io.connect('http://' + host + ':' + port);
+
 let canvas = document.getElementById('canvas');
 let ctx;
 var touchStart = [];
