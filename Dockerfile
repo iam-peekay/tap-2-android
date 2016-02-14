@@ -6,7 +6,7 @@ MAINTAINER preethi kasireddy iam.preethi.k@gmail.com
 # Specially for SSH access and port redirection
 ENV ROOTPASSWORD android
 
-# Expose Node and ZeroRPC server ports
+# Expose Node, ZeroRPC, Redis server ports
 EXPOSE 8000
 EXPOSE 4242
 EXPOSE 6379
@@ -42,6 +42,9 @@ RUN apt-get install -y python-pip \
     python-setuptools \
     python-dev
 
+# Install androidViewClient
+RUN easy_install --upgrade androidviewclient
+
 # Install Node, npm
 RUN curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 RUN apt-get install -y nodejs
@@ -54,6 +57,7 @@ RUN apt-get install -y nodejs
 RUN pip install pyzmq
 RUN pip install zerorpc
 RUN npm install -g zerorpc
+RUM npm install -g redis
 
 # Create app directory
 RUN mkdir -p /usr/src/tap-to-android

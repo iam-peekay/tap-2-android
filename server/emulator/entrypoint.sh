@@ -49,3 +49,7 @@ fi
 
 echo "no" | /usr/local/android-sdk/tools/android create avd -f -n test -t ${EMULATOR} --abi default/${ARCH}
 echo "no" | nohup /usr/local/android-sdk/tools/emulator64-${EMU} -avd test -noaudio -no-window -gpu off -no-boot-anim -verbose -qemu -vnc :2 &
+
+# Allow the emulator to boot up
+sleep 30
+npm start

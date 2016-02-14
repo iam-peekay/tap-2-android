@@ -19,8 +19,6 @@ device.wake()
 # Connecting to zerorpc
 import zerorpc
 class HelloRPC(object):
-    def helloWorld(self, name):
-        return "Hello, %s" % name
     def handle_user_input(self, input_type, data):
         if input_type is None:
             return 'Oops, you forgot to provide a correct input type'
@@ -33,15 +31,6 @@ class HelloRPC(object):
         elif input_type == 'menu':
             device.press('KEYCODE_MENU', adbclient.DOWN_AND_UP)
             return 'Menu!'
-        elif input_type == 'camera':
-            device.touch(50, 600, adbclient.DOWN_AND_UP)
-            return 'Camera!'
-        elif input_type == 'messages':
-            device.touch(350, 750, adbclient.DOWN_AND_UP)
-            return 'Messages!'
-        elif input_type == 'web':
-            device.touch(450, 750, adbclient.DOWN_AND_UP)
-            return 'Web!'
         elif input_type == 'volumeUp':
             device.press('KEYCODE_VOLUME_UP', adbclient.DOWN_AND_UP)
             return 'Volume up!'

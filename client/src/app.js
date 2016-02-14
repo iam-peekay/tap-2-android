@@ -65,24 +65,9 @@ menu.addEventListener('click', function() {
     socket.emit('userInput', 'menu');
 });
 
-let camera = document.getElementById('camera');
-camera.addEventListener('click', function() {
-    socket.emit('userInput', 'camera');
-});
-
-let messages = document.getElementById('messages');
-messages.addEventListener('click', function() {
-    socket.emit('userInput', 'messages');
-});
-
 let home = document.getElementById('home');
 home.addEventListener('click', function() {
     socket.emit('userInput', 'home');
-});
-
-let web = document.getElementById('web');
-web.addEventListener('click', function() {
-    socket.emit('userInput', 'web');
 });
 
 let volumeUp = document.getElementById('volumeUp');
