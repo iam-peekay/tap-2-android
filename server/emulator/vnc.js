@@ -2,7 +2,6 @@ const EventEmitter = require('events');
 const util = require('util');
 const rfb = require('rfb2');
 const fs = require('fs');
-const Canvas = require('canvas');
 
 function VNC(host, port) {
   EventEmitter.call(this);
@@ -61,6 +60,7 @@ module.exports = VNC;
 // docker inspect --format '{{ .NetworkSettings.IPAddress }}'
 // clean all containers: docker ps -a | sed '1 d' | awk '{print $1}' | xargs -L1 docker rm
 // clean all images: docker images -a | sed '1 d' | awk '{print $3}' | xargs -L1 docker rmi -f
+// docker run -it --privileged -P <IMAGE_ID>
 // run arbitrary commands inside an existing container: docker exec -it <mycontainer> bash
 // https://wiki.archlinux.org/index.php/QEMU#Mouse_integration
 // https://github.com/aikinci/droidbox/blob/master/install-fastdroid-vnc.sh

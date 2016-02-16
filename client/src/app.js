@@ -58,28 +58,6 @@ function handleTouchMove(ev) {
 
   touchMove.push(touches);
 }
-// Below event handlers are just for testing purposes.
-// Will be replaced
-let menu = document.getElementById('menu');
-menu.addEventListener('click', function() {
-    socket.emit('userInput', 'menu');
-});
-
-let home = document.getElementById('home');
-home.addEventListener('click', function() {
-    socket.emit('userInput', 'home');
-});
-
-let volumeUp = document.getElementById('volumeUp');
-volumeUp.addEventListener('click', function() {
-    socket.emit('userInput', 'volumeUp');
-});
-
-document.body.addEventListener('click', function(ev) {
-  console.log(ev);
-});
-
-
 /*
   Socket.io client connection.
 

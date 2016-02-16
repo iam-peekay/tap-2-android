@@ -31,6 +31,11 @@ fi
 
 # Run sshd
 /usr/sbin/sshd
+
+# Start the redis server in subprocess without taking up stdin
+(redis-server &)
+
+# Start ADB server for emulator
 adb start-server
 
 # Detect ip and forward ADB ports outside to outside interface
@@ -47,9 +52,12 @@ else
     EMU="arm"
 fi
 
+# Create AVD
 echo "no" | /usr/local/android-sdk/tools/android create avd -f -n test -t ${EMULATOR} --abi default/${ARCH}
-echo "no" | nohup /usr/local/android-sdk/tools/emulator64-${EMU} -avd test -noaudio -no-window -gpu off -no-boot-anim -verbose -qemu -vnc :2 &
 
-# Allow the emulator to boot up
-sleep 30
+# Start emulator
+(echo "no" | /usr/local/android-sdk/tools/emulator64-${EMU} -avd test -noaudio -no-window -gpu off -no-boot-anim -verbose -qemu -vnc :2 &)
+
+# Allow the emulator to boot up, then start node server
+sleep 90
 npm start

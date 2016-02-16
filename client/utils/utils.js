@@ -3,7 +3,6 @@
 
 const Blob = require('blob');
 const PNG = require('node-png').PNG;
-const Canvas = require('canvas');
 
 export const blobToImage = (imageData) => {
   let image;

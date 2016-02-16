@@ -22,14 +22,16 @@ const redis = require('socket.io-redis');
 const port = process.env.PORT || 8000;
 const uri = require('./redis').uri;
 const exec = require('child_process').exec;
-const child = exec('redis-server',
-  (error, stdout, stderr) => {
-    console.log(`stdout: ${stdout}`);
-    console.log(`stderr: ${stderr}`);
-    if (error !== null) {
-      console.log(`exec error: ${error}`);
-    }
-});
+
+// FOR DEV PURPOSES ONLY
+// const child = exec('redis-server',
+//   (error, stdout, stderr) => {
+//     console.log(`stdout: ${stdout}`);
+//     console.log(`stderr: ${stderr}`);
+//     if (error !== null) {
+//       console.log(`exec error: ${error}`);
+//     }
+// });
 
 /*
   Connection to Android View Client.
