@@ -2,6 +2,7 @@ const EventEmitter = require('events');
 const util = require('util');
 const VNC = require('./vnc');
 const net = require('net');
+const redisEmulatorClient = require('./../redis').emulator();
 
 /*
 * An emulator instance occupies a pair of adjacent ports: a console port
@@ -13,7 +14,7 @@ const net = require('net');
 * emulator instances can run a console facility.
 */
 
-// Built-in android emulator VNC port.
+// Android emulator VNC port which we connect to is 5902
 const hostName = process.env.HOST || '127.0.0.1';
 const port = process.env.ANDROID_VNC_PORT || 5902;
 const tcp = process.env.ANDROID_TCP || '127.0.0.1:5555';
@@ -35,6 +36,7 @@ util.inherits(Android, EventEmitter);
 
 Android.prototype.closed = () => {
   this.running = false;
+  // Restart emulator after 100ms
   setTimeout(this.run, 100);
   return;
 };
@@ -74,6 +76,7 @@ Android.prototype.run = function() {
   this.vnc.on('raw', (imageData) => {
     if (this.firstFrameReceived) {
       self.emit('raw', imageData);
+      redisEmulatorClient.set('emulator:firstFrame', imageData.toString());
     } else {
       self.emit('firstFrame', imageData);
       this.firstFrameReceived = true;

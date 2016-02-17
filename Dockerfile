@@ -36,6 +36,7 @@ RUN apt-get -y install python-software-properties \
     ssh \
     net-tools \
     curl \
+    git \
     nano \
     wget \
     build-essential \
@@ -172,4 +173,5 @@ RUN npm install
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["-e","android-23","-a","x86"]
+
+# CMD ["-e","android-23","-a","x86"]

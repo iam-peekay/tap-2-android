@@ -23,7 +23,7 @@ function handleTouchStart(ev) {
   let touches = ev.changedTouches;
   console.log('touch start', touches);
 
-  touchStart.push(touches);
+  touchStart.unshift(touches);
 }
 
 function handleTouchEnd(ev) {
@@ -31,7 +31,7 @@ function handleTouchEnd(ev) {
   let touches = ev.changedTouches;
   console.log('touch end', touches);
 
-  touchEnd.push(touches);
+  touchEnd.unshift(touches);
   if (touchStart.length === 0) {
     return;
   }
@@ -45,18 +45,17 @@ function handleTouchEnd(ev) {
   }
 }
 
+function handleTouchMove(ev) {
+  ev.preventDefault();
+  let touches = ev.changedTouches;
+
+  touchMove.push(touches);
+}
+
 function handleTouchCancel(ev) {
   ev.preventDefault();
   let touches = ev.changedTouches;
   console.log('touch cancel', touches);
-}
-
-function handleTouchMove(ev) {
-  ev.preventDefault();
-  let touches = ev.changedTouches;
-  console.log('touch move', touches);
-
-  touchMove.push(touches);
 }
 /*
   Socket.io client connection.
@@ -101,7 +100,12 @@ socket.on('raw', function (imageData) {
 
 socket.on('copy', function(rect){
   const canvasImageData = ctx.getImageData(rect.src.x, rect.src.y, rect.width, rect.height);
-  ctx.putImageData(canvasImageData, rect.x, rect.y);
+  // Set up canvas context
+  ctx = canvas.getContext('2d');
+  // Tranform canvas imageData
+
+  // Paint imageData to canvas
+  putImageOnCanvas(ctx, canvasImageData);
 });
 
 const putImageOnCanvas = (ctx, imageData) => {

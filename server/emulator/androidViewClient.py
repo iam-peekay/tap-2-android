@@ -40,10 +40,10 @@ class HelloRPC(object):
         else:
             return 'Oops, something went wrong. Please provide the correct input type'
     def unlock_phone(self):
-        device.drag((400, 1800), (400, 200), 1.0, 120)
+        device.drag((500, 1800), (500, 200), 1.0, 120)
         return 'Unlocked!'
 
 s = zerorpc.Server(HelloRPC())
 s.bind("tcp://0.0.0.0:4242")
 s.run()
-device.drag((400, 1800), (400, 200), 1.0, 120)
+device.drag((500, 1800), (500, 200), 1.0, 120)

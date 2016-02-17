@@ -7,6 +7,7 @@ const compiler = webpack(config);
 
 // Emulator import
 const emulatorEmitter = require('./emulator/emitter');
+const redisMobileClient = require('./redis').mobile();
 
 // HTTP server + Express server imports
 const path = require('path');
@@ -24,13 +25,25 @@ const uri = require('./redis').uri;
 const exec = require('child_process').exec;
 
 // FOR DEV PURPOSES ONLY
-// const child = exec('redis-server',
-//   (error, stdout, stderr) => {
-//     console.log(`stdout: ${stdout}`);
-//     console.log(`stderr: ${stderr}`);
-//     if (error !== null) {
-//       console.log(`exec error: ${error}`);
-//     }
+var Docker = require('dockerode');
+var fs = require('fs');
+var docker = new Docker({
+  protocol: 'https',
+  host: '192.168.81.129',
+  port: 2376,
+  cert: fs.readFileSync('/Users/peekay/.docker/machine/machines/vmware/cert.pem'),
+  ca: fs.readFileSync('/Users/peekay/.docker/machine/machines/vmware/ca.pem'),
+  key: fs.readFileSync('/Users/peekay/.docker/machine/machines/vmware/key.pem')
+});
+
+// docker.pull('iampeekay/android-emulator-node:v2', function (err, stream) {
+//   // streaming output from pull...
+//   if (err) {
+//     console.log(err.stack);
+//   } else {
+//     console.log('STREAMMMM!');
+//     console.log(stream);
+//   }
 // });
 
 /*
@@ -66,7 +79,7 @@ server.listen(port, (error) => {
   }
 });
 
-// Middleware
+// Webpack Middleware - FOR DEV PURPOSES ONLY
 // app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
 // app.use(webpackHotMiddleware(compiler));
 
@@ -77,13 +90,12 @@ app.use(express.static(__dirname + '/../build'));
 
 // Routes
 app.get('/', (req, res) => {
+    redisMobileClient.get('emulator:firstFrame', (err, imageData) => {
+      console.log('redis successfully first frame');
+      console.log(imageData);
+    });
     res.render('index.mustache');
 });
-
-// Connect to Android emulator after a delay of 8 seconds
-setTimeout(function() {
-  emulatorEmitter();
-}, 8000);
 
 /*
   Socket-io connection and event handlers. The main
@@ -98,8 +110,18 @@ setTimeout(function() {
   the name of the function, and remaining args are arguments
   being passed to this function)
 */
+var emulatorState = {};
 io.on('connection', (socket) => {
-  console.log('socketio server connection successful!');
+  console.log('socketio server connection successful! Socket.io ID:', socket.id);
+  /*
+     If first time client is connecting, run the emulator
+     This is necessary so that the user gets the first frame
+     from the connection event to the emulator
+  */
+  if (emulatorState[socket.id] === undefined) {
+    emulatorEmitter();
+    emulatorState[socket.id] = true;
+  }
 
   socket.on('userInput', (type, data) => {
     console.log('got here!')

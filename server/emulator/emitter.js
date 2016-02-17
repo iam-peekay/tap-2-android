@@ -10,8 +10,9 @@ function loadEmulator() {
   const emulator = new Android();
 
   emulator.on('error', () => {
-    console.log('Restarting emulator');
+    console.log('Destroying emulator');    
     emulator.destroy();
+    console.log('Restarting emulator');
     setTimeout(loadEmulator, 1000);
   });
 

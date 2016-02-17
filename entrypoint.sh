@@ -60,4 +60,9 @@ echo "no" | /usr/local/android-sdk/tools/android create avd -f -n test -t ${EMUL
 
 # Allow the emulator to boot up, then start node server
 sleep 90
+
+(python server/emulator/androidViewClient.py &)
+
+sleep 10
+
 npm start
