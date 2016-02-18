@@ -53,10 +53,10 @@ else
 fi
 
 # Create AVD
-echo "no" | /usr/local/android-sdk/tools/android create avd -f -n test -t ${EMULATOR} --abi default/${ARCH}
+echo "no" | /usr/local/android-sdk/tools/android create avd -f -n taptoandroid  -t ${EMULATOR} --abi default/${ARCH}
 
 # Start emulator
-(echo "no" | /usr/local/android-sdk/tools/emulator64-${EMU} -avd test -noaudio -no-window -gpu off -no-boot-anim -verbose -qemu -vnc :2 &)
+(echo "no" | /usr/local/android-sdk/tools/emulator64-${EMU} -avd taptoandroid -noaudio -no-window -gpu off -no-boot-anim -verbose -qemu -vnc :2 &)
 
 # Allow the emulator to boot up, then start node server
 sleep 90

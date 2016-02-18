@@ -174,4 +174,4 @@ ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-# CMD ["-e","android-23","-a","x86"]
+CMD ["-e","android-23","-a","x86"]

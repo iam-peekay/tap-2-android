@@ -12,7 +12,6 @@ except:
 from com.dtmilano.android.adb import adbclient
 import com.dtmilano.android.viewclient as viewclient
 device, serialno = viewclient.ViewClient.connectToDeviceOrExit(verbose=True)
-
 # POWER button press doesn't work to turn on
 device.wake()
 

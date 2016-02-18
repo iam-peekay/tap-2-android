@@ -24,28 +24,6 @@ const port = process.env.PORT || 8000;
 const uri = require('./redis').uri;
 const exec = require('child_process').exec;
 
-// FOR DEV PURPOSES ONLY
-var Docker = require('dockerode');
-var fs = require('fs');
-var docker = new Docker({
-  protocol: 'https',
-  host: '192.168.81.129',
-  port: 2376,
-  cert: fs.readFileSync('/Users/peekay/.docker/machine/machines/vmware/cert.pem'),
-  ca: fs.readFileSync('/Users/peekay/.docker/machine/machines/vmware/ca.pem'),
-  key: fs.readFileSync('/Users/peekay/.docker/machine/machines/vmware/key.pem')
-});
-
-// docker.pull('iampeekay/android-emulator-node:v2', function (err, stream) {
-//   // streaming output from pull...
-//   if (err) {
-//     console.log(err.stack);
-//   } else {
-//     console.log('STREAMMMM!');
-//     console.log(stream);
-//   }
-// });
-
 /*
   Connection to Android View Client.
   Create a ZeroRPC client object which connects to a
