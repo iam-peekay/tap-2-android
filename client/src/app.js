@@ -12,11 +12,14 @@ let ctx;
 var touchStart = [];
 var touchEnd = [];
 var touchMove = [];
-
-canvas.addEventListener("touchstart", handleTouchStart, false);
-canvas.addEventListener("touchend", handleTouchEnd, false);
-canvas.addEventListener("touchcancel", handleTouchCancel, false);
-canvas.addEventListener("touchmove", handleTouchMove, false);
+var mouseUp = [];
+var mouseDown = [];
+canvas.addEventListener('touchstart', handleTouchStart, false);
+canvas.addEventListener('touchend', handleTouchEnd, false);
+canvas.addEventListener('touchcancel', handleTouchCancel, false);
+canvas.addEventListener('touchmove', handleTouchMove, false);
+canvas.addEventListener('mouseup', handleMouseUp, false);
+canvas.addEventListener('mousedown', handleMouseDown, false);
 
 function handleTouchStart(ev) {
   ev.preventDefault();
@@ -56,6 +59,22 @@ function handleTouchCancel(ev) {
   ev.preventDefault();
   let touches = ev.changedTouches;
   console.log('touch cancel', touches);
+}
+
+function handleMouseDown(ev) {
+  ev.preventDefault();
+  mouseDown.unshift(ev)
+}
+
+function handleMouseUp(ev) {
+  ev.preventDefault();
+  mouseUp.unshift(ev);
+  console.log(mouseDown, mouseUp)
+  if (mouseDown[0].pageX === mouseUp[0].pageX && mouseDown[0].pageY === mouseUp[0].pageY) {
+    socket.emit('touch', {'x': mouseUp[0].pageX, 'y': mouseUp[0].pageY});
+  } else {
+    socket.emit('drag', {'startX': mouseDown[0].pageX, 'startY': mouseDown[0].pageY, 'endX': mouseUp[0].pageX, 'endY': mouseDown[0].pageY});
+  }
 }
 /*
   Socket.io client connection.

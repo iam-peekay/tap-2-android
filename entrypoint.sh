@@ -53,16 +53,16 @@ else
 fi
 
 # Create AVD
-echo "no" | /usr/local/android-sdk/tools/android create avd -f -n taptoandroid  -t ${EMULATOR} --abi default/${ARCH}
+echo "no" | /usr/local/android-sdk/tools/android create avd -f -n taptoandroid  -t ${EMULATOR} --skin WVGA800 --abi default/${ARCH}
 
 # Start emulator
-(echo "no" | /usr/local/android-sdk/tools/emulator64-${EMU} -avd taptoandroid -noaudio -no-window -gpu off -no-boot-anim -verbose -qemu -vnc :2 &)
+(echo "no" | /usr/local/android-sdk/tools/emulator64-${EMU} -avd taptoandroid -noaudio -no-window -gpu off -no-boot-anim -timezone America/Los_Angeles -verbose -qemu -vnc :2 &)
 
 # Allow the emulator to boot up, then start node server
-sleep 90
+sleep 120
 
 (python server/emulator/androidViewClient.py &)
 
-sleep 10
+sleep 25
 
 npm start

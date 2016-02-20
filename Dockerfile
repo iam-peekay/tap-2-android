@@ -135,7 +135,7 @@ RUN chown -R root:root /usr/local/android-sdk/
 RUN echo "y" | android update sdk --filter platform-tool --no-ui --force
 RUN echo "y" | android update sdk --filter platform --no-ui --force
 RUN echo "y" | android update sdk --filter build-tools-23.0.2 --no-ui -a
-RUN echo "y" | android update sdk --filter sys-img-x86-android-22 --no-ui -a
+RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-23 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-23 --no-ui -a
 
 # Update ADB
@@ -174,4 +174,5 @@ ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["-e","android-23","-a","x86"]
+# CMD ["-e","android-23","-a","x86"]
+CMD ["-e","android-23","-a","armeabi-v7a"]

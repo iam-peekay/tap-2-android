@@ -25,7 +25,7 @@ class HelloRPC(object):
             device.touch(data['x'], data['y'], adbclient.DOWN_AND_UP)
             return 'Touched!'
         elif input_type == 'drag':
-            device.drag((data['startX'], data['startY']), (data['endX'], data['endY']), 1.0, 120)
+            device.drag((data['startX'], data['startY']), (data['endX'], data['endY']), 1000, 20)
             return 'Drag!'
         elif input_type == 'menu':
             device.press('KEYCODE_MENU', adbclient.DOWN_AND_UP)

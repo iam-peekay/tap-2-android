@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "iampeekay/android-emulator_nodejs_python:v1",
+    "Name": "iampeekay/android-emulator-arm_nodejs_python:v1",
     "Update": "true"
   },
   "Ports": [
