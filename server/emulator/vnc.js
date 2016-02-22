@@ -54,16 +54,9 @@ VNC.prototype.drawRect = function(rect) {
 
 module.exports = VNC;
 
-// emulator -avd Nexus_5_API_23 -no-window -gpu off -cpu-delay 0 -no-boot-anim -qemu -vnc :2
-// sudo lsof -i -n -P | grep TCP
-// adb kill-server
-// docker inspect --format '{{ .NetworkSettings.IPAddress }}'
-// clean all containers: docker ps -a | sed '1 d' | awk '{print $1}' | xargs -L1 docker rm
-// clean all images: docker images -a | sed '1 d' | awk '{print $3}' | xargs -L1 docker rmi -f
-// docker run -it --privileged -P <IMAGE_ID>
+
 // run arbitrary commands inside an existing container: docker exec -it <mycontainer> bash
-// https://wiki.archlinux.org/index.php/QEMU#Mouse_integration
-// https://github.com/aikinci/droidbox/blob/master/install-fastdroid-vnc.sh
+
 /*
 ca-certificates
 libreadline-gplv2-dev \
@@ -74,13 +67,6 @@ tk-dev \
 libgdbm-dev \
 libc6-dev \
 libbz2-dev \
-
-# Install Python
-# RUN wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
-# RUN tar xzf Python-3.4.3.tgz
-# RUN cd Python-3.4.3
-# RUN ./configure
-# RUN make altinstall
 
 # Install fastdroid VNC server
 RUN wget ‐‐directory-prefix=/usr/local/ https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/fastdroid-vnc/fastdroid-vnc

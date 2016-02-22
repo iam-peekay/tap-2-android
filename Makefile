@@ -13,11 +13,25 @@ COLON := :
 
 .PHONY = run ports kill ps
 
+# PK's Emulator name: Nexus_5_API_23
 startEmu:
-	@emulator -avd Nexus_5_API_23 -no-window -gpu off -cpu-delay 0 -no-boot-anim -qemu -vnc :2 &
+	@emulator -avd ${EMU_NAME} -no-window -gpu off -cpu-delay 0 -no-boot-anim -qemu -vnc :2 &
 
 killEmu:
 	@kill -9 $(RUNNINGIMAGE_PID)
+
+tcp:
+	@sudo lsof -i -n -P | grep TCP
+
+inspectDockerIP:
+	@docker inspect --format '{{ .NetworkSettings.IPAddress }}'
+
+destroyAllContainers:
+	@docker ps -a | sed '1 d' | awk '{print $1}' | xargs -L1 docker rm
+
+destroyAllImages:
+	@docker images -a | sed '1 d' | awk '{print $3}' | xargs -L1 docker rmi -f
+
 all:
 	@docker build -t android_emulator .
 	@docker images

@@ -14,7 +14,7 @@ const redisEmulatorClient = require('./../redis').emulator();
 * emulator instances can run a console facility.
 */
 
-// Android emulator VNC port which we connect to is 5902
+// Android emulator VNC diplay 2 connects to port 5902
 const hostName = process.env.HOST || '127.0.0.1';
 const port = process.env.ANDROID_VNC_PORT || 5902;
 const tcp = process.env.ANDROID_TCP || '127.0.0.1:5555';

@@ -1,3 +1,5 @@
+// TODO:
+
 // Touch UP / Touch DOWN / Touch DOWN_AND_UP
 // Press UP / Press DOWN / Press DONW_AND_UP
 // Type DOWN_AND_UP
@@ -14,10 +16,6 @@
 // object getProperty (string key)
 // object shell (string cmd)
 
-// void installPackage (string path)
-// void removePackage (string package)
-
-
 // void reboot (string bootloadType)
 // void wake ()
 
@@ -26,11 +24,10 @@
 // void startActivity ( string uri, string action, string data, string mimetype, iterable categories dictionary extras, component component, iterable flags)
 
 /* ACTIONS
+
 - ACTION_DOWN
 - ACTION_UP
 - ACTION_MULTIPLE
 - FLAG_CANCELED
-- 
-
 
 */

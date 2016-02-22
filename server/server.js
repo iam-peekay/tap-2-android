@@ -66,14 +66,8 @@ app.engine('mustache', mustache());
 app.set('views', __dirname + '/../client/views');
 app.use(express.static(__dirname + '/../build'));
 
-// Routes
-app.get('/', (req, res) => {
-    redisMobileClient.get('emulator:firstFrame', (err, imageData) => {
-      console.log('redis successfully first frame');
-      console.log(imageData);
-    });
-    res.render('index.mustache');
-});
+// Serve main index page
+app.get('/', (req, res) => res.render('index.mustache'));
 
 /*
   Socket-io connection and event handlers. The main
@@ -145,7 +139,7 @@ io.on('connection', (socket) => {
 
 
 /*
-Environment variables to set:
+Various host + port #'s being used:
 - HOST
 - PORT
 - RPC_PORT

@@ -17,7 +17,7 @@ device.wake()
 
 # Connecting to zerorpc
 import zerorpc
-class HelloRPC(object):
+class RPC(object):
     def handle_user_input(self, input_type, data):
         if input_type is None:
             return 'Oops, you forgot to provide a correct input type'
@@ -42,7 +42,7 @@ class HelloRPC(object):
         device.drag((500, 1800), (500, 200), 1.0, 120)
         return 'Unlocked!'
 
-s = zerorpc.Server(HelloRPC())
+s = zerorpc.Server(RPC())
 s.bind("tcp://0.0.0.0:4242")
 s.run()
 device.drag((500, 1800), (500, 200), 1.0, 120)

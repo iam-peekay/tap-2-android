@@ -28,13 +28,14 @@ RUN echo "debconf shared/accepted-oracle-license-v1-1 seen true" | debconf-set-s
 # Update packages
 RUN apt-get -y update
 
-# Install add-apt-repository, sshd, bzip2, net tools and make
+# Install system tools / libraries
 RUN apt-get -y install python-software-properties \
     python3-software-properties \
     software-properties-common \
     bzip2 \
     ssh \
     net-tools \
+    vim \
     curl \
     git \
     nano \
