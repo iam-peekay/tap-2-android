@@ -8,9 +8,6 @@ function VNC(host, port) {
   this.host = host;
   this.port = port;
   this.displayNum = port - 5902; // Android Emulator VNC port
-  this.state = [];
-  this.width = 800;
-  this.height = 600;
 
   this.r = rfb.createConnection({
     host,
@@ -52,23 +49,4 @@ VNC.prototype.drawRect = function(rect) {
   }
 };
 
-module.exports = VNC;
-
-
-// run arbitrary commands inside an existing container: docker exec -it <mycontainer> bash
-
-/*
-ca-certificates
-libreadline-gplv2-dev \
-libncursesw5-dev \
-libssl-dev \
-libsqlite3-dev \
-tk-dev \
-libgdbm-dev \
-libc6-dev \
-libbz2-dev \
-
-# Install fastdroid VNC server
-RUN wget ‐‐directory-prefix=/usr/local/ https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/fastdroid-vnc/fastdroid-vnc
-
-*/
+module.exports = VNC
