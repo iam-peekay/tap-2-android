@@ -83,7 +83,7 @@ function handleMouseUp(ev) {
       'startX': mouseDown[0].pageX,
       'startY': mouseDown[0].pageY,
       'endX': mouseUp[0].pageX,
-      'endY': mouseDown[0].pageY,
+      'endY': mouseUp[0].pageY,
     });
   }
 }
@@ -111,13 +111,23 @@ const putImageOnCanvas = (imageData) => {
     because it is expecting it to be 32bpp, but our
     data is 16bpp.
 
-    For every 2 bytes (16 bits), we generate the current
-    pixel containing 16 bits, little endian true.
-    Then we apply the red/blue/green shift, then
-    & the result by the red/green/blue max.
-    Then divide this result (which is out of the max values)
-    by the max value and multiply by 255 because putImageData
-    is expecting canvasImageData.data values to be out of 255 :)
+    For every 2 bytes (16 bits), we generate the current pixel
+    containing 16 bits, little endian true. This is how our data
+    is coming in. Then we apply the red/blue/green shift, then &
+    the result by the red/green/blue max. (see section 7.4 to of
+    the rfb protocol: https://tools.ietf.org/rfc/rfc6143.txt.)
+    What we're left with now is the color value out of the max possible
+    value (e.g. 12 out of 31 for red or 50 out of 63 for green and
+    so on). So we need to divide this result by the max value to get
+    a %, and then multiply by 255 because putImageData is expecting
+    canvasImageData.data values to be represented between 0 and 255.
+
+    We go through each pixel like this, and assign the converted color
+    values to the canvasImageData object. So the first index is Red,
+    second is blue, third is green and so on. Note that we are not
+    receiving alpha values in our raw pixel data. Out of the 16 bits,
+    5 are for red, 6 for green and 5 for blue. None for alpha. But the canvasImageData is expecting an alpha value at every 4th index,
+    so we just set it to 255 for every pixel and call it a day.
   */
   for (let i = 0; i < dataView.byteLength; i += 2) {
     let currentPixel = dataView.getInt16(i, true);

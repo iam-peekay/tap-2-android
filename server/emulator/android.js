@@ -76,7 +76,6 @@ Android.prototype.run = function() {
   this.vnc.on('raw', (imageData) => {
     if (this.firstFrameReceived) {
       self.emit('raw', imageData);
-      redisEmulatorClient.set('emulator:firstFrame', imageData.toString());
     } else {
       self.emit('firstFrame', imageData);
       this.firstFrameReceived = true;

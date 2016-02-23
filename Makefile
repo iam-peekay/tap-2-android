@@ -15,7 +15,7 @@ COLON := :
 
 # PK's Emulator name: Nexus_5_API_23
 startEmu:
-	@emulator -avd ${EMU_NAME} -no-window -gpu off -cpu-delay 0 -no-boot-anim -qemu -vnc :2 &
+	@emulator -avd ${EMU_NAME} -no-window -gpu off -cpu-delay 0 -no-boot-anim -timezone America/Los_Angeles -qemu -vnc :2 &
 
 killEmu:
 	@kill -9 $(RUNNINGIMAGE_PID)

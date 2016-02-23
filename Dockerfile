@@ -138,6 +138,7 @@ RUN echo "y" | android update sdk --filter platform --no-ui --force
 RUN echo "y" | android update sdk --filter build-tools-23.0.2 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-23 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-23 --no-ui -a
+RUN echo "y" | android update sdk --filter sys-img-x86_64-android-23 --no-ui -a
 
 # Update ADB
 RUN echo "y" | android update adb
