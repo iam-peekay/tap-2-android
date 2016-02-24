@@ -4,13 +4,13 @@ const io = require('socket.io-emitter')(redis);
 
 process.title = 'socket.io-android-emulator';
 
-// Load Android emulator instance and listen to events
+// Create Android emulator instance and listen to events
 // being emitted from Android emulator
 function loadEmulator() {
   const emulator = new Android();
 
   emulator.on('error', () => {
-    console.log('Destroying emulator');    
+    console.log('Destroying emulator');
     emulator.destroy();
     console.log('Restarting emulator');
     setTimeout(loadEmulator, 1000);

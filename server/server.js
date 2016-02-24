@@ -7,7 +7,6 @@ const compiler = webpack(config);
 
 // Emulator import
 const emulatorEmitter = require('./emulator/emitter');
-const redisMobileClient = require('./redis').mobile();
 
 // HTTP server + Express server imports
 const path = require('path');
@@ -22,7 +21,6 @@ const io = require('socket.io')(server);
 const redis = require('socket.io-redis');
 const port = process.env.PORT || 8000;
 const uri = require('./redis').uri;
-const exec = require('child_process').exec;
 
 /*
   Connection to Android View Client.

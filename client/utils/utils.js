@@ -17,26 +17,6 @@ export const blobToImage = (imageData) => {
   return image;
 }
 
-export const drawImage = (canvas, frameData) => {
-  let img = new Image();
-
-  img.onload = function() {
-    ctx = canvas.getContext('2d');
-    ctx.drawImage(img, frameData.x, frameData.y);
-  };
-
-  let imageUrl = bufferToImage(frameData.data);
-  img.src = frameData.image;
-
-  if (typeof URL !== 'undefined') {
-    URL.revokeObjectURL(src);
-  }
-
-  img.onerror = function(error) {
-    console.log("ERROR: ", error);
-  }
-}
-
 export const bufferToImage = (arrayBuffer) => {
     // Obtain a blob: URL for the image data.
     let arrayBufferView = new Uint8Array(arrayBuffer);
@@ -46,6 +26,7 @@ export const bufferToImage = (arrayBuffer) => {
     return imageUrl;
 };
 
+// real implementation on ctx.putImageData
 export const putImage = (ctx, dx, dy, width, height, imageData, dirtyX, dirtyY, dirtyWidth, dirtyHeight) => {
   let data = imageData.data;
   let height = imageData.height;

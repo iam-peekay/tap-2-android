@@ -45,4 +45,3 @@ class RPC(object):
 s = zerorpc.Server(RPC())
 s.bind("tcp://0.0.0.0:4242")
 s.run()
-device.drag((500, 1800), (500, 200), 1.0, 120)
