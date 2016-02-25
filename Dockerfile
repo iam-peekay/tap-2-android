@@ -37,6 +37,7 @@ RUN apt-get -y install python-software-properties \
     net-tools \
     vim \
     curl \
+    expect \
     git \
     nano \
     wget \
@@ -51,8 +52,12 @@ RUN apt-get -y install python-software-properties \
     libvirt-bin \
     ubuntu-vm-builder \
     bridge-utils \
-    virt-viewer \
-    checkinstall \
+    virt-viewer
+
+# Update packages
+RUN apt-get -y update
+
+RUN apt-get -y install checkinstall \
     libevent-dev \
     libffi-dev \
     libncurses-dev \

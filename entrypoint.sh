@@ -58,7 +58,7 @@ fi
 # We need to turn the main keys on. Hence, we have to go through the interactive custom hardware profile options to turn config the mainkeys to be on
 expect <<- DONE
 
-spawn /usr/local/android-sdk/tools/android create avd -f -n taptoandroid  -t ${EMULATOR} --abi default/${ARCH}
+spawn /usr/local/android-sdk/tools/android create avd -f -n taptoandroid  -t 11 --abi default/x86_64
 
 expect "*?Do you wish to create a custom hardware profile*"
 send "yes\r"
@@ -85,7 +85,7 @@ expect "*?Ideal size of data partition:*"
 send "\n\r"
 
 expect "*?Path to the ramdisk image: Path to the ramdisk image.*"
-send "yes\r"
+send "\n\r"
 
 expect "*?Path to snapshot storage: Path to a 'snapshot storage' file, where all snapshots are stored.*"
 send "\n\r"
@@ -127,7 +127,7 @@ expect "*?CPU model: The CPU model (QEMU-specific string)*"
 send "\n\r"
 
 expect "*?DPad support: Whether the device has DPad keys*"
-send "yes\r"
+send "\n\r"
 
 expect "*?GPS support: Whether there is a GPS in the device.*"
 send "\n\r"
@@ -193,7 +193,7 @@ expect "*?Proximity support: Whether there is an proximity in the device.*"
 send "\n\r"
 
 expect "*?Temperature support: Provides temperature sensor values.*"
-send "yes\r"
+send "\n\r"
 
 expect "*?Track-ball support: Whether there is a trackball on the device.*"
 send "\n\r"
@@ -223,8 +223,10 @@ expect eof
 
 DONE
 
+sleep 20
+
 # Start emulator
-(echo "no" | /usr/local/android-sdk/tools/emulator64-${EMU} -avd taptoandroid -noaudio -no-window -gpu off -no-boot-anim -timezone America/Los_Angeles -verbose -qemu -vnc :2 &)
+(echo "no" | /usr/local/android-sdk/tools/emulator64-x86 -avd taptoandroid -noaudio -no-window -gpu off -no-boot-anim -timezone America/Los_Angeles -verbose -qemu -vnc :2 &)
 
 # Allow the emulator to boot up, then start node server
 sleep 120
