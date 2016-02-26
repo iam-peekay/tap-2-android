@@ -65,7 +65,7 @@ app.set('views', __dirname + '/../client/views');
 app.use(express.static(__dirname + '/../build'));
 
 // Serve main index page
-app.get('/', (req, res) => res.render('index.mustache'));
+app.get('/', (req, res) => res.render('index.mustache', { port: port }));
 
 /*
   Socket-io connection and event handlers. The main

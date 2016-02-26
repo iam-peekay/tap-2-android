@@ -145,7 +145,7 @@ expect "*?Initial screen orientation: Setup initial screen orientation, can be r
 send "\n\r"
 
 expect "*?Keyboard support: Whether the device has a QWERTY keyboard.*"
-send "yes\r"
+send "\n\r"
 
 expect "*?Keyboard charmap name: Name of the system keyboard charmap file.*"
 send "\n\r"

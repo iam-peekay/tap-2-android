@@ -10,16 +10,15 @@ ENV ROOTPASSWORD android
 
 # Expose ADB, ADB control, and VNC ports
 EXPOSE 22
-EXPOSE 5037
-EXPOSE 5554
+# EXPOSE 5037
+# EXPOSE 5554
 EXPOSE 5555
-EXPOSE 5900
 EXPOSE 5902
 
 # Expose Node, ZeroRPC, Redis server ports
 EXPOSE 8000
-EXPOSE 4242
-EXPOSE 6379
+# EXPOSE 4242
+# EXPOSE 6379
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN echo "debconf shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
@@ -141,7 +140,7 @@ RUN chown -R root:root /usr/local/android-sdk/
 RUN echo "y" | android update sdk --filter platform-tool --no-ui --force
 RUN echo "y" | android update sdk --filter platform --no-ui --force
 RUN echo "y" | android update sdk --filter build-tools-23.0.2 --no-ui -a
-RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-23 --no-ui -a
+# RUN echo "y" | android update sdk --filter sys-img-armeabi-v7a-android-23 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86-android-23 --no-ui -a
 RUN echo "y" | android update sdk --filter sys-img-x86_64-android-23 --no-ui -a
 

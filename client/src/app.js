@@ -1,11 +1,13 @@
-/* global URL */
+/* global URL, config */
 
 const io = require('socket.io-client');
 // NOTE: Must be set to the external IP address of
 // the machine the server runs on
 const host = process.env.HOST || 'localhost';
-const port = process.env.PORT || '8000';
+const port = config.port || '8000';
 const socket = io.connect(`http://${host}:${port}`);
+// const socket = io.connect(`http://63.251.224.244:${port}`);
+// const socket = io.connect(`http://192.168.81.129:${port}`);
 
 // Define canvas element where Android emulator will be painted
 let canvas = document.getElementById('canvas');
@@ -72,7 +74,7 @@ const putImageOnCanvas = (imageData) => {
 */
 
 socket.on('connect', () => {
-  console.log('connection on client');
+  console.log('Connection on client on port: ' + config.port);
 });
 
 
